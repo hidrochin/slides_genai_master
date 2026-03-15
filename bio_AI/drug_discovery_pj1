@@ -1,0 +1,39 @@
+Dự đoán đích tác động của thuốc 
+Hi Bioinformatics Lab,
+ 
+Dự đoán đích tác động (target: Mục tiêu điều trị) của thuốc là một bài toán cốt lõi trong lĩnh vực khám phá và chế tạo thuốc (Drug Discovery). Trong đó, khi được hấp thụ vào cơ thể thì drug sẽ bám vào các đích (target, thường là các protein) làm tác động đến chức năng sinh học của protein đó, từ đó điều chỉnh hoạt động của con đường sinh học (biological pathway) liên quan đến bệnh. --> Khỏi bệnh.
+
+Gồm 2 cách tiếp cận chính:
+Dự đoán tương tác giữa drug và target (DTI: Drug-target Interaction) --> Bài toán phân lớp
+Dự đoán ái lực liên kết giữa drug và target (DTA: Drug-Target Affinity) --> Bài toán hồi quy
+Tham khảo thêm tại HUST-AU-JointSymposium2025_Final2.pdf
+(https://husteduvn.sharepoint.com/:b:/s/CBM_Lab/EW6RWvPagsBHvvc8THrLT2UBZ3ID82IYXEXVR9kzC_AQ5A?e=0TgQld)
+Hiện tại có một số hướng nghiên cứu chính sau:
+Dự đoán đích tác động của thuốc nói chung (sử dụng các cơ sở dữ liệu về thuốc, hợp chất hoá học,...)
+Ứng dụng trong Y học cổ truyền Trung Quốc (TCM: Traditional Chinese Medicine): Xác định các mục tiêu điều trị (target ) mới của các hợp chất tự nhiên trong thảo dược (sử dụng các cơ sở dữ liệu TCM vê các hợp chất tự nhiên trong thảo dược)
+Dự đoán đích tác động của thuốc nói chung
+Các công bố về DTI/DTA
+https://drive.google.com/drive/folders/1194K5biPJcBsgWckrppoc62UjrWciFs5?usp=sharing
+ 
+Các bài Review:
+2019 - A comprehensive review of feature based methods for drug target interaction prediction
+2023 - A survey of drug-target interaction and affinity prediction methods via graph neural networks
+2024 - A comparative analysis of Drug-Target Interaction detection approaches using Ensemble of Machine learning models
+2024 - A comprehensive review of the recent advances on predicting drug-target affinity based on deep learning
+2024 - Prediction of compound-target interaction using several artificial intelligence algorithms and comparison with a consensus-based strategy
+2025 - Drug-target interaction-affinity prediction- Deep learning models and advances review
+2025 - A survey on deep learning for drug-target binding prediction- models, benchmarks, evaluation, and case studies
+Các phương pháp cụ thể:
+2022 - A novel method for drug-target interaction prediction based on graph transformers model-DTI-GTN
+2024 - Drug–target interaction prediction by integrating heterogeneous information with mutual attention network-DrugMAN
+2024 - Drug–target interaction predictions with multi-view similarity network fusion strategy and deep interactive attention mechanism-MIDTI
+2024 - GSRF-DTI- a framework for drug-target interaction prediction based on a drug-target pair network and representation learning on a large graph
+2024 - MINDG- a drug–target interaction prediction method based on an integrated learning algorithm
+2024 - MSI-DTI- predicting drug-target interaction based on multi-source information and multi-head self-attention
+2025 - DeepDTAGen- a multitask deep learning framework for drug-target affinity prediction and target-aware drugs generation
+ 
+
+ 
+ 
+Access Google Drive with a Google account (for personal use) or Google Workspace account (for business use).
+HUST-AU-JointSymposium2025_Final2.pdf
