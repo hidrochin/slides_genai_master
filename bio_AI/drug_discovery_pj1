@@ -31,6 +31,30 @@ Các phương pháp cụ thể:
 2024 - MINDG- a drug–target interaction prediction method based on an integrated learning algorithm
 2024 - MSI-DTI- predicting drug-target interaction based on multi-source information and multi-head self-attention
 2025 - DeepDTAGen- a multitask deep learning framework for drug-target affinity prediction and target-aware drugs generation
+
+Dự đoán tác dụng mới của thuốc (Drug repositioning/Drug repurposing), còn được gọi là "tái định vị thuốc", là một bài toán quan trọng trong lĩnh vực Khám phá và thiết kế thuốc. Phương pháp này giúp rút ngắn đáng kể thời gian và chi phí nghiên cứu và phát triển thuốc bằng cách tìm thêm tác dụng mới của thuốc (chữa được các bệnh mới) (ngoài những tác dụng được thiết kế).
+ 
+Xem thêm tại HUST-AU-JointSymposium2025_Final2.pdf
+ 
+Các công bố gần đây:
+https://drive.google.com/drive/folders/1wOfPPiVFb21uPWaJfCtbtA7QPRIJlfP5?usp=sharing
+ 
+Các bài Review:
+2021 - A deep learning framework for drug repurposing via emulating clinical trials on real-world patient data
+2022 - Deep learning for drug repurposing- Methods, databases, and applications
+2023 - Machine learning for drug repositioning- Recent advances and challenges
+2024 - Computational approaches for predicting drug-disease associations: a comprehensive review
+2025 - Applications of Artificial Intelligence in Drug Repurposing
+2025 - Towards a more inductive world for drug repurposing approaches
+2025 - From matrix factorization to graph neural networks- Advances in computational drug repositioning
+Các Phương pháp cụ thể:
+2022 - A geometric deep learning framework for drug repositioning over heterogeneous information networks-DDAGDL
+2025 - Regulation-aware graph learning for drug repositioning over heterogeneous biological network-RGLDR
+2025 - Heterogeneous graph contrastive learning with gradient balance for drug repositioning-GCGB
+2025 - Improving computational drug repositioning through multi-source disease similarity networks-MHDR
+2025 - Drug repositioning with metapath guidance and adaptive negative sampling enhancement-DRMGNE
+2026 - RWRGDR: Random Walk and GraphSAGE-based Framework for Enhanced Drug Repositioning
+2026 - A Novel Drug Repositioning Method Using Meta-Path Aggregating via Hierarchical Attention Mechanism
  
 
  
