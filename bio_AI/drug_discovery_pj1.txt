@@ -34,8 +34,6 @@ Các phương pháp cụ thể:
 
 Dự đoán tác dụng mới của thuốc (Drug repositioning/Drug repurposing), còn được gọi là "tái định vị thuốc", là một bài toán quan trọng trong lĩnh vực Khám phá và thiết kế thuốc. Phương pháp này giúp rút ngắn đáng kể thời gian và chi phí nghiên cứu và phát triển thuốc bằng cách tìm thêm tác dụng mới của thuốc (chữa được các bệnh mới) (ngoài những tác dụng được thiết kế).
  
-Xem thêm tại HUST-AU-JointSymposium2025_Final2.pdf
- 
 Các công bố gần đây:
 https://drive.google.com/drive/folders/1wOfPPiVFb21uPWaJfCtbtA7QPRIJlfP5?usp=sharing
  
@@ -55,9 +53,17 @@ Các Phương pháp cụ thể:
 2025 - Drug repositioning with metapath guidance and adaptive negative sampling enhancement-DRMGNE
 2026 - RWRGDR: Random Walk and GraphSAGE-based Framework for Enhanced Drug Repositioning
 2026 - A Novel Drug Repositioning Method Using Meta-Path Aggregating via Hierarchical Attention Mechanism
- 
 
+
+Protein là các phân tử trung tâm của hệ sống, đảm nhiệm nhiều chức năng sinh học quan trọng như xúc tác phản ứng, truyền tín hiệu, điều hòa biểu hiện gen và cấu trúc tế bào. Tuy nhiên, số lượng protein đã được giải trình tự tăng nhanh vượt xa khả năng chú giải chức năng bằng thực nghiệm. Do đó, bài toán dự đoán chức năng của protein bằng phương pháp tính toán, đặc biệt là học sâu (deep learning), trở thành một hướng nghiên cứu then chốt trong tin sinh học hiện đại.
+Về bản chất, bài toán nhằm ánh xạ từ các biểu diễn của protein (chuỗi axit amin, cấu trúc không gian 3D, mạng tương tác protein–protein, hoặc thông tin tích hợp từ nhiều nguồn) sang các nhãn chức năng, thường được chuẩn hóa theo hệ thống Gene Ontology (GO) gồm ba khía cạnh: Molecular Function (MF), Biological Process (BP) và Cellular Component (CC). Đây là một bài toán phân loại đa nhãn, phân cấp, với không gian nhãn lớn và mất cân bằng mạnh.
+Các mô hình học sâu cho phép tự động học đặc trưng từ dữ liệu thô, vượt qua hạn chế của các phương pháp dựa trên đặc trưng thủ công. Tùy theo loại dữ liệu đầu vào, các phương pháp hiện đại có thể được chia thành: (i) mô hình dựa trên chuỗi protein (CNN, RNN, Transformer, protein language models), (ii) mô hình dựa trên cấu trúc 3D (graph neural networks trên bản đồ tiếp xúc), (iii) mô hình dựa trên mạng tương tác protein, và (iv) mô hình lai tích hợp nhiều nguồn thông tin. Các kết quả thực nghiệm, đặc biệt trong các thử thách CAFA, cho thấy học sâu—nhất là các mô hình tích hợp đa thông tin—đạt hiệu năng vượt trội và là xu hướng chủ đạo trong dự đoán chức năng protein hiện nay.
  
- 
-Access Google Drive with a Google account (for personal use) or Google Workspace account (for business use).
-HUST-AU-JointSymposium2025_Final2.pdf
+Tài liệu tham khảo:
+2024 - A comprehensive review and comparison of existing computational methods for protein function prediction
+2024 - Deep learning methods for protein function prediction
+2025 - Deep learning methods for protein representation and function prediction- A comprehensive overview
+Một số bài báo:
+2026 - Integrating ESM‑2 and Graph Neural Networks with AlphaFold‑2 Structures for Enhanced Protein Function Prediction
+2026 - A unified graph-based approach for protein function prediction using AlphaFold structures and sequence features
+https://drive.google.com/drive/folders/14uGOBZNGa1gF72FD2yj8S9PYiAtYYQF3?usp=sharing
