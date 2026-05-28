@@ -35,16 +35,13 @@ def _read_matrix(path, expected_shape=None):
             f"Adjust header/index_col in _read_matrix.")
     return arr.astype(np.float32)
 
-
-def _read_pairs(path, max_col0, max_col1):
-    """Read an association-number csv (two integer columns) -> (M,2) int array."""
-    df = pd.read_csv(path, header=0, index_col=0)
-    pairs = df.to_numpy()
-    pairs = pairs.astype(np.int64)
-    assert pairs[:, 0].max() < max_col0 and pairs[:, 1].max() < max_col1, \
-        f"{os.path.basename(path)}: index out of range; check column order."
-    return pairs
-
+def _read_matrix(path, shape=None):
+    df = pd.read_csv(path, header=0, index_col=0)          # label row + label col
+    arr = df.apply(pd.to_numeric, errors="coerce").to_numpy(np.float64)
+    arr = np.nan_to_num(arr, nan=0.0).astype(np.float32)
+    if shape is not None:
+        assert arr.shape == shape, f"{path}: got {arr.shape}, expected {shape}"
+    return arr
 
 def _topk_sparsify(S, k, thr):
     """Keep top-k off-diagonal neighbours per row above thr; zero the rest.
