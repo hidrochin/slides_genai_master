@@ -1,6 +1,9 @@
 # Chương 6 – Trí tuệ nhân tạo diễn giải (Explainable AI – XAI)
 
 > Slide chương này nặng hình ảnh, ít chữ → file này bổ sung kiến thức nền để hiểu trọn vẹn. Cấu trúc gồm 6 mục + bài thực hành coding.
+>
+> **🔖 Nhãn ra thi:** 🔴 CAO · 🟡 TB · ⚪ THẤP (xem [Chuong1](Chuong1_GioiThieu_GenAI_TinSinh_YHoc.md)).
+> Trọng tâm chắc ra: **intrinsic vs post-hoc**, **5 chiều đánh giá**, **SHAP/LIME/Grad-CAM**, **disagreement problem**, **hallucination + RAG**.
 
 **Nội dung (6 mục):**
 - 6.1. Giới thiệu XAI
@@ -12,22 +15,24 @@
 
 ---
 
-## 6.1. Giới thiệu XAI ⭐
+## 6.1. Giới thiệu XAI ⭐ 🔴 CAO
 - **Vấn đề "black box"**: mô hình deep learning là "hộp đen" – **hiệu năng tăng thì khả năng diễn giải giảm** → khủng hoảng niềm tin ở lĩnh vực rủi ro cao (y tế, tài chính).
 - **Vì sao cần diễn giải trong tin sinh?**
   - Quyết định rủi ro cao: chẩn đoán, khám phá thuốc.
   - Lý do pháp lý/quy định: **FDA, GDPR** compliance.
   - Niềm tin & sự chấp nhận của bác sĩ/nhà sinh học.
 
-### Hai loại diễn giải ⭐
+### Hai loại diễn giải ⭐ 🔴 CAO (bẫy đảo ngược intrinsic ↔ post-hoc)
 | Loại | Mô tả | Ví dụ |
 |---|---|---|
-| **Intrinsic (nội tại)** | Bản thân mô hình đã dễ diễn giải | Decision tree, linear/logistic regression, rule-based (RuleFit, RIPPER) |
-| **Post-hoc (hậu kỳ)** | Giải thích mô hình black-box **sau khi** huấn luyện | **SHAP, LIME**, Grad-CAM, permutation importance |
+| **Intrinsic (nội tại)** | Bản thân mô hình đã dễ diễn giải (**self-explaining**) | Decision tree, linear/logistic regression, rule-based (RuleFit, RIPPER) |
+| **Post-hoc (hậu kỳ)** | Giải thích mô hình black-box **sau khi** huấn luyện (**model-agnostic**) | **SHAP, LIME**, Grad-CAM, permutation importance |
 
-- **Trade-off Accuracy ↔ Interpretability**: mô hình càng chính xác thường càng khó diễn giải.
+- **Trade-off Accuracy ↔ Interpretability**: mô hình càng chính xác thường càng **khó** diễn giải (hiệu năng tăng → interpretability giảm).
 
-### 5 chiều đánh giá một lời giải thích (Evaluation Dimensions) ⭐
+> 🎯 **Bẫy:** *intrinsic* = mô hình đơn giản tự diễn giải (cây, hồi quy); *post-hoc* = giải thích SAU cho black-box (SHAP/LIME/Grad-CAM). Đừng gán SHAP/LIME vào intrinsic.
+
+### 5 chiều đánh giá một lời giải thích (Evaluation Dimensions) ⭐ 🔴 CAO (nhớ đủ 5 + Fidelity đo bằng PGI)
 1. **Fidelity (trung thực)** – "tấm gương của sự thật": lời giải thích phản ánh **chính xác** hành vi mô hình gốc đến đâu. Đo bằng **PGI (Prediction Gap on Importance)**.
 2. **Interpretability (khả hiểu)**: con người có hiểu được không? (giao diện người dùng).
 3. **Robustness (bền vững)**: lời giải thích có ổn định khi input bị nhiễu nhẹ (perturbation) không? Vỡ dưới nhiễu → không tin cậy. Liên quan **spurious correlation** (tương quan giả) → giải bằng **Correlation Difference (CD)**.
@@ -39,7 +44,7 @@
 
 ---
 
-## 6.2. XAI trong GenAI (Explainable Generative AI) ⭐
+## 6.2. XAI trong GenAI (Explainable Generative AI) ⭐ 🔴 CAO (hallucination + RAG là câu tủ)
 - **Từ Quyết định đến Sáng tạo (From Decision to Creation)**: XAI truyền thống giải thích **phân loại**; GenAI cần giải thích **sinh dữ liệu**.
 - **Thách thức riêng của GenAI:**
   - **Infinite output variability** (đầu ra biến thiên vô hạn).
@@ -52,7 +57,7 @@
 
 ---
 
-## 6.3. Các phương pháp diễn giải cho GenAI ⭐
+## 6.3. Các phương pháp diễn giải cho GenAI ⭐ 🔴 CAO (SHAP/LIME/Grad-CAM/counterfactual)
 - **Chain-of-Thought (CoT)** & vấn đề **unfaithful self-explanation** (mô hình tự giải thích không trung thực).
 - **Probe internal state** (thăm dò trạng thái nội bộ).
 - **Feature Attributions in Text** (gán tầm quan trọng cho token).
@@ -73,7 +78,7 @@
 
 ---
 
-## 6.4. Đánh giá diễn giải bằng dữ liệu thực nghiệm ⭐
+## 6.4. Đánh giá diễn giải bằng dữ liệu thực nghiệm ⭐ 🟡 TB
 - **"Does it work right?"** – kiểm chứng lời giải thích bằng dữ liệu thực nghiệm (ground truth sinh học).
 - Áp dụng 5 chiều đánh giá (Fidelity/PGI, Interpretability, Robustness, Fairness, Completeness).
 - **Dynamic Weighting** giữa các chiều tùy **domain**: Healthcare, Finance, Security có ưu tiên khác nhau.
@@ -81,7 +86,7 @@
 
 ---
 
-## 6.5. Xác định yếu tố sinh học chính trong mô hình AI ⭐
+## 6.5. Xác định yếu tố sinh học chính trong mô hình AI ⭐ 🟡 TB (polysemanticity & distributed rep. hay hỏi)
 Hai góc nhìn (có so sánh với khoa học thần kinh):
 - **Micro View**: 
   - **Receptive Fields vs Feature Visualization**.
@@ -104,7 +109,7 @@ Hai góc nhìn (có so sánh với khoa học thần kinh):
 
 ---
 
-## 6.6. Diễn giải trong các bài toán hiện đại (Healthcare focus) ⭐
+## 6.6. Diễn giải trong các bài toán hiện đại (Healthcare focus) ⭐ 🟡 TB
 - **Fidelity vs Fairness** (White-box Paradox).
 - **Grad-CAM++** – phát hiện **khối u não (Brain Tumor Detection)** từ ảnh.
 - **Beyond the Pixel: EMR (Electronic Medical Records)** – diễn giải trên hồ sơ y tế điện tử.
@@ -124,7 +129,21 @@ Hai góc nhìn (có so sánh với khoa học thần kinh):
 
 ---
 
-## 6.7. Câu hỏi ôn tập nhanh
+## 6.7. 🎯 Điểm tủ Chương 6 (ưu tiên ôn)
+1. 🔴 **Intrinsic vs Post-hoc** – định nghĩa + ví dụ (cây/hồi quy ↔ SHAP/LIME/Grad-CAM); trade-off accuracy↔interpretability.
+2. 🔴 **5 chiều đánh giá**: Fidelity (đo bằng **PGI**), Interpretability, Robustness (spurious correlation → CD), Fairness, Completeness/Ablation.
+3. 🔴 **The Disagreement Problem** – các phương pháp (ABC/BND/PGI) cho kết quả mâu thuẫn.
+4. 🔴 **Hallucination** (trôi chảy nhưng sai sự thật) + chống bằng **Uncertainty Estimation** & **RAG**.
+5. 🔴 **SHAP** (Shapley/game theory, cục bộ+toàn cục) vs **LIME** (cục bộ, model-agnostic) vs **Grad-CAM** (heatmap ảnh/CNN).
+6. 🟡 **Counterfactual explanation** ("nếu input khác thì sao"); CoT & **unfaithful self-explanation**.
+7. 🟡 **Polysemanticity** (1 neuron nhiều khái niệm) vs **Distributed representation** (Micro vs Macro view).
+8. 🔴 **Correlation ≠ Causation** – feature "quan trọng" ≠ nhân quả (nối với PRS ở Ch5).
+
+**🎯 Bẫy hay gặp Chương 6:** gán SHAP/LIME là intrinsic (sai – **post-hoc**); nói "hiệu năng cao → dễ diễn giải" (ngược lại); quên Fidelity đo bằng PGI; nhầm LIME là toàn cục (LIME = **cục bộ**).
+
+---
+
+## 6.8. Câu hỏi ôn tập nhanh
 1. Vì sao cần **XAI** trong tin sinh/y tế? Nêu lý do pháp lý.
 2. Phân biệt **intrinsic vs post-hoc** interpretability. Cho ví dụ. Trade-off accuracy-interpretability?
 3. Nêu **5 chiều đánh giá** một lời giải thích. **Fidelity** đo bằng gì (PGI)?

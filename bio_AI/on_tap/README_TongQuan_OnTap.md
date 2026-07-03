@@ -16,6 +16,24 @@
 
 ---
 
+## 🔖 Hệ thống nhãn "xác suất ra thi" (mới thêm)
+
+Mỗi mục trong 6 file chương giờ được gắn nhãn mức độ có thể xuất hiện trong đề trắc nghiệm:
+
+| Nhãn | Ý nghĩa | Cách học |
+|---|---|---|
+| 🔴 **CAO** | Gần như chắc chắn có câu hỏi | Học kỹ, thuộc **định nghĩa + số liệu + so sánh** |
+| 🟡 **TB** | Có khả năng ra | Nắm **ý chính + 1 ví dụ** |
+| ⚪ **THẤP** | Ít khi hỏi trực tiếp | Đọc để hiểu mạch, không cần thuộc |
+
+- Mỗi chương có thêm mục **"🎯 Điểm tủ"** ở gần cuối: liệt kê các câu tủ theo thứ tự ưu tiên (học từ trên xuống nếu ít thời gian).
+- Rải rác trong bài có các hộp **"🎯 Bẫy"**: chỉ ra kiểu phương án sai thường gặp (đảo ngược cặp khái niệm, gán nhầm ví dụ, dùng từ tuyệt đối).
+- Cơ sở đánh giá nhãn: mức nhấn mạnh trong slide (⭐), khái niệm có định nghĩa/so sánh rõ, số liệu "đắt", và mức lặp lại xuyên suốt môn.
+
+> **Chiến lược ôn nước rút:** quét toàn bộ mục 🔴 của cả 6 chương trước → sau đó làm bộ `../trac_nghiem/` → sai đâu quay lại đọc mục tương ứng.
+
+---
+
 ## 🔗 Sợi chỉ đỏ xuyên suốt môn học
 
 **1. Central Dogma là nền tảng của mọi thứ:**

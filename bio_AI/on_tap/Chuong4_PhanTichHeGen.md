@@ -1,12 +1,15 @@
 # Chương 4 – Phân tích hệ gen (Genome Analysis)
 
-> Chương lớn nhất. Gồm: (A) Nền tảng di truyền học & công nghệ giải trình tự; (B) **Quy trình GATK** (tiền xử lý → germline → somatic → annotation); (C) **Ứng dụng GenAI trong phân tích hệ gen**.
+> ⭐ **CHƯƠNG TRỌNG TÂM NHẤT CỦA MÔN.** Gồm: (A) Nền tảng di truyền học & công nghệ giải trình tự; (B) **Quy trình GATK** (tiền xử lý → germline → somatic → annotation); (C) **Ứng dụng GenAI trong phân tích hệ gen**.
+>
+> **🔖 Nhãn ra thi:** 🔴 CAO · 🟡 TB · ⚪ THẤP (xem [Chuong1](Chuong1_GioiThieu_GenAI_TinSinh_YHoc.md)).
+> Cả 3 phần đều nhiều câu; **Phần B (pipeline GATK) là "mỏ" câu hỏi** – học kỹ thứ tự công cụ ở mỗi bước.
 
 ---
 
 ## PHẦN A – NỀN TẢNG DI TRUYỀN & GIẢI TRÌNH TỰ
 
-### 4.1. Germline vs Somatic ⭐
+### 4.1. Germline vs Somatic ⭐ 🔴 CAO (bẫy kinh điển – hay đảo ngược)
 | | **Germline (dòng mầm)** | **Somatic (tế bào soma)** |
 |---|---|---|
 | Tế bào | Tế bào sinh dục (trứng, tinh trùng) | Mọi tế bào khác cơ thể |
@@ -14,14 +17,14 @@
 | Hiện diện | Có trong **mọi tế bào** cơ thể | Chỉ ở **một tập con** tế bào (vd khối u) |
 | Ví dụ | Bệnh di truyền, BRCA1/2 | Đột biến ung thư (driver mutations) |
 
-### 4.2. Biểu hiện gen & di truyền
+### 4.2. Biểu hiện gen & di truyền 🟡 TB
 - **Gene expression**: thông tin trong gen → chức năng (qua phiên mã RNA). Như "công tắc bật/tắt" + "núm điều chỉnh âm lượng".
 - **Repressor**: protein ức chế biểu hiện gen (gắn vùng promoter, chặn tạo mRNA).
 - **Genotype** (kiểu gen: BB, Bb, bb hoặc CC, CT, TT) vs **Phenotype** (kiểu hình).
 - **Kiểu di truyền (family pedigree)**: Autosomal dominant (trội – mỗi thế hệ đều có), Autosomal recessive (lặn – cả bố mẹ mang gen), X-linked dominant/recessive, Y-linked, **Mitochondrial** (chỉ mẹ truyền).
 - **BRCA1/BRCA2**: tumor suppressor, mất chức năng cả 2 copy → ung thư vú/buồng trứng.
 
-### 4.3. Các loại biến thể di truyền (genetic variation) ⭐
+### 4.3. Các loại biến thể di truyền (genetic variation) ⭐ 🔴 CAO
 - Khác biệt giữa 2 người: ~1 SNV mỗi 1000 bp → ~**2,7 triệu khác biệt (~0,1%)**. (Chính xác hơn: ~99,6% giống, ~0,4% khác khi tính cả indel).
 - **Nhỏ (< 50 bp):**
   - **SNV/SNP** (Single Nucleotide Variant/Polymorphism) – biến thể 1 nucleotide.
@@ -31,7 +34,7 @@
 - **Mức NST**: Trisomy 21 (Down), 18 (Edwards), Turner, XYY.
 - **Zygosity**: **heterozygous (het)** – 1 NST; **homozygous (hom)** – cả 2 NST.
 
-### 4.4. Công nghệ giải trình tự (Sequencing Technologies) ⭐
+### 4.4. Công nghệ giải trình tự (Sequencing Technologies) ⭐ 🔴 CAO (hay so sánh Illumina/PacBio/Nanopore)
 | Công nghệ | Loại | Đặc điểm |
 |---|---|---|
 | **Illumina / BGI** | Short read (50–150 bp, tối đa 250) | Phổ biến nhất, shotgun, độ chính xác cao; khó với vùng lặp → dùng **paired-end** |
@@ -43,7 +46,7 @@
 - **WGS (Whole-Genome Seq)**: toàn bộ ~3,1 tỷ bp; **WES (Whole-Exome Seq)**: chỉ ~**1,4%** genome (vùng mã hóa), coverage sâu hơn nhưng bỏ vùng non-coding.
 - **Paired-end sequencing**: đọc 2 đầu mỗi fragment → 2 file FASTQ (R1, R2). Khoảng cách bất thường giữa cặp read → gợi ý deletion/insertion/translocation.
 
-### 4.5. Các dự án hệ gen & tài nguyên
+### 4.5. Các dự án hệ gen & tài nguyên 🟡 TB (nhớ số liệu HGP & DGV4VN)
 - **Human Genome Project (HGP)**: 1990–2003, 2500 nhà KH, 20 lab, 7 nước, ~**$3 tỷ**; hoàn thành ~92% (8% còn lại rất khó – vùng lặp).
 - **1000 Genomes Project (1KGP)** (2008–2015); **HapMap** (bản đồ haplotype, **tag SNP**); **gnomAD** (tiền thân ExAC, tổng hợp exome/genome).
 - **DGV4VN/1KVG**: dự án Việt Nam – giải trình tự WGS 30x cho **1000 người Kinh** → CSDL biến thể người Việt (VinBigdata, 2019–2023). Mục tiêu: reference panel cho **GWAS, PGx (dược lý gen), bệnh di truyền, xét nghiệm ADR**.
@@ -53,7 +56,7 @@
 
 ## PHẦN B – ⭐⭐ QUY TRÌNH GATK (GATK Best Practices)
 
-### 4.6. Định dạng dữ liệu & công cụ
+### 4.6. Định dạng dữ liệu & công cụ 🔴 CAO (FASTA/FASTQ/BAM/VCF/GVCF hay hỏi)
 | Định dạng | Ý nghĩa |
 |---|---|
 | **FASTA** | Trình tự đơn giản (dùng cho **reference genome** – authoritative, không cần quality score) |
@@ -67,12 +70,12 @@
 - **Reference genome**: chuỗi "chuẩn" của loài (mosaic từ ~20 người, chủ yếu RP11). Bản mới nhất **GRCh38** (2013), 24 chuỗi NST (22 + X + Y) + mtDNA.
 - Công cụ pipeline: **GATK** (Broad Institute – chuẩn công nghiệp cho germline SNP/indel), **DRAGEN** (Illumina, tăng tốc phần cứng), **DRAGEN-GATK**, **NVIDIA Parabricks** (GPU, tăng tốc tới 107x).
 
-### 4.7. Kiểm soát chất lượng (QC)
+### 4.7. Kiểm soát chất lượng (QC) 🟡 TB
 - **FastQC**: phân tích chất lượng FASTQ (per base quality, per sequence GC content, adapter content, duplication...). **MultiQC**: gộp báo cáo nhiều mẫu.
 - **Fastp / Trimmomatic**: cắt/trim reads. **mosdepth**: tính độ sâu (depth/coverage).
 - Chú ý: vùng **GC cao** thường coverage thấp hơn (artifact).
 
-### 4.8. ⭐ Tiền xử lý dữ liệu (Data Pre-processing) – 3 bước
+### 4.8. ⭐ Tiền xử lý dữ liệu (Data Pre-processing) – 3 bước 🔴 CAO (chắc chắn ra – nhớ đúng thứ tự)
 ```
 FASTQ → [1] Map to Reference → [2] Mark Duplicates → [3] Base Quality Score Recalibration (BQSR) → Analysis-ready BAM
 ```
@@ -86,7 +89,7 @@ FASTQ → [1] Map to Reference → [2] Mark Duplicates → [3] Base Quality Scor
    gatk ApplyBQSR -R ref.fasta -I markdups.bam --bqsr-recal-file recal.table -O recal.bam
    ```
 
-### 4.9. ⭐ Germline Short Variant Discovery (SNP + Indel)
+### 4.9. ⭐ Germline Short Variant Discovery (SNP + Indel) 🔴 CAO (HaplotypeCaller + GVCF workflow là điểm tủ)
 
 **Nguồn lỗi cần kiểm soát**: PCR artifacts (duplicates), sequencing (base calling), alignment (misalignment), variant calling (low depth), genotyping.
 
@@ -112,7 +115,8 @@ FASTQ → [1] Map to Reference → [2] Mark Duplicates → [3] Base Quality Scor
 Raw callset có nhiều FP → cần lọc. **3 cách:**
 1. **Hard filtering**: lọc theo ngưỡng cứng trên các annotation:
    - **QD** (QualByDepth), **FS** (FisherStrand – strand bias, Fisher's exact test), **SOR** (StrandOddsRatio), **MQ** (Mapping Quality), **MQRankSum**, **ReadPosRankSum** (Wilcoxon rank-sum / Mann-Whitney U test), **ExcessHet**.
-2. **VQSR (Variant Quality Score Recalibration)** ⭐: dùng **VariantRecalibrator** + **ApplyVQSR**. Học mô hình từ **truth set** (vd GiaB **NA12878**) để tính điểm **VQSLOD**. Làm việc trên **cohort/nhiều mẫu**.
+   - Ví dụ ngưỡng kinh điển: **QD < 2.0** → gắn nhãn "QD2" (VariantFiltration `--filter-expression "QD < 2.0"`); **FS** cao & **SOR** cao = strand bias mạnh. *(QD = QUAL chuẩn hóa theo độ sâu → chỉ báo tin cậy đáng tin nhất.)*
+2. **VQSR (Variant Quality Score Recalibration)** ⭐: dùng **VariantRecalibrator** + **ApplyVQSR**. Học mô hình (Gaussian mixture) từ **truth set** (vd GiaB **NA12878**, HapMap, Omni, 1000G) trên các annotation `-an QD -an MQ -an MQRankSum -an ReadPosRankSum -an FS -an SOR` để tính điểm **VQSLOD** (log-odds là biến thể thật). Xuất **tranches file** ánh xạ **truth-sensitivity** (vd **99.9%**, 99.0%, 95.0%) ↔ ngưỡng VQSLOD. Làm việc trên **cohort/nhiều mẫu**, chạy **riêng SNP và INDEL**.
 3. **CNNScoreVariants** (deep learning): **CNN_1D** (chỉ dùng annotation) và **CNN_2D** (dùng cả **read data**). Tốt cho single-sample.
 - **Genotype refinement**: **CalculateGenotypePosteriors** dùng **pedigree file** (thông tin gia đình/quần thể) để tinh chỉnh genotype.
 
@@ -121,7 +125,7 @@ Raw callset có nhiều FP → cần lọc. **3 cách:**
 - **Ti/Tv ratio** (Transition/Transversion): đột biến không ngẫu nhiên; **transition** (A↔G, C↔T) phổ biến hơn **transversion**. Ti/Tv lệch → dấu hiệu chất lượng.
 - Cần khớp thuộc tính dataset (ethnicity, WGS/WES...).
 
-### 4.10. ⭐ Somatic Variant Discovery (ung thư)
+### 4.10. ⭐ Somatic Variant Discovery (ung thư) 🔴 CAO (Mutect2, PoN, strand vs orientation bias)
 
 **Bối cảnh ung thư**: tế bào tích lũy đột biến → tăng sinh không kiểm soát → khối u → di căn (metastasis).
 - **Driver mutations** (đột biến lái): trực tiếp thúc đẩy ung thư, được **chọn lọc dương**, tái diễn nhiều bệnh nhân → **trọng tâm phân tích**.
@@ -180,7 +184,7 @@ gatk Mutect2 -R ref.fasta -I tumor.bam -I normal.bam -normal <SM_normal> \
   - **Minor Allele Fraction**: dùng site heterozygous để lộ **allelic imbalance** mà copy-ratio không thấy. CNV somatic làm lệch cân bằng allele 50:50.
   - **Penalty factor λ**: điều khiển độ mượt segmentation. `Objective = Data fit + λ × (số segment)`. λ thấp → nhạy hơn; λ cao → robust hơn.
 
-### 4.11. ⭐ Functional Annotation (diễn giải biến thể)
+### 4.11. ⭐ Functional Annotation (diễn giải biến thể) 🔴 CAO (nonsense/missense/frameshift + công cụ)
 - **Câu hỏi**: biến thể có ở vùng quan trọng (gene? UTR?)? Có đổi coding sequence? Có ảnh hưởng?
 - **Công cụ**: **Funcotator** (GATK, output VCF/MAF, có data source germline & somatic, dùng gnomAD), **VEP** (Ensembl, tích hợp SIFT & PolyPhen), **SnpEff/SnpSift**, **Annovar**, PolyPhen.
 - **Loại đột biến (coding):**
@@ -196,14 +200,14 @@ gatk Mutect2 -R ref.fasta -I tumor.bam -I normal.bam -normal <SM_normal> \
 
 > Tham chiếu: Yelmen & Jay, *Deep Generative Models in Functional and Evolutionary Genomics*, Annual Review 2023.
 
-### 4.12. Nền tảng mô hình sinh sâu (DGM)
+### 4.12. Nền tảng mô hình sinh sâu (DGM) 🔴 CAO (VAE/GAN/WGAN/RBM hay so sánh)
 - **VAE**: encoder → phân phối latent (regularized về N(0,1)) → decoder. Loss = reconstruction + KL. Sinh dữ liệu mới bằng cách lấy mẫu latent.
 - **GAN**: generator vs discriminator/critic, huấn luyện đối kháng tới cân bằng. Có thể **conditional**.
 - **RBM (Restricted Boltzmann Machine)**: 2 lớp (visible + hidden), học phân phối qua **Start → Reconstruct → Compare → Repeat** (contrastive divergence).
 - **Kiến trúc NN**: Fully-connected (bắt mọi tương quan sequence), **CNN** (motif, linkage disequilibrium – cấu trúc cục bộ), **RNN** (dữ liệu tuần tự DNA/RNA).
 - **WGAN vs GAN**: WGAN dùng **Wasserstein distance** (ổn định hơn, chống mode collapse) + **Critic** (xuất điểm số) thay Discriminator (xuất xác suất 0-1). GAN dùng Jensen-Shannon divergence (kém ổn định).
 
-### 4.13. Năm ứng dụng GenAI (⭐ mỗi cái 1 ví dụ điển hình)
+### 4.13. Năm ứng dụng GenAI (⭐ mỗi cái 1 ví dụ điển hình) 🔴 CAO (ghép mô hình ↔ ứng dụng)
 
 | # | Ứng dụng | Mô hình / Công cụ tiêu biểu | Ý chính |
 |---|---|---|---|
@@ -220,7 +224,7 @@ gatk Mutect2 -R ref.fasta -I tumor.bam -I normal.bam -normal <SM_normal> \
 - **Haplotype**: nhóm biến thể trên cùng NST di truyền cùng nhau.
 - **Imputation**: "điền" genotype thiếu dựa vào reference panel (vd 1000 Genomes). AG nhân tạo cải thiện imputation ở MAF thấp.
 
-### 4.14. ⭐ Dự đoán biến thể gây bệnh (chi tiết – hay hỏi)
+### 4.14. ⭐ Dự đoán biến thể gây bệnh (chi tiết – hay hỏi) 🔴 CAO (EVE vs AlphaMissense là câu tủ)
 
 **Vì sao cần?** ~98% biến thể (kể cả ở gene liên quan bệnh) chưa rõ hậu quả; số biến thể vượt xa khả năng thực nghiệm → cần dự đoán tính toán (**VUS – Variant of Unknown Significance**).
 
@@ -240,7 +244,35 @@ gatk Mutect2 -R ref.fasta -I tumor.bam -I normal.bam -normal <SM_normal> \
 
 ---
 
-## 4.15. Câu hỏi ôn tập nhanh
+## 4.15. 🎯 Điểm tủ Chương 4 (xác suất ra thi cao nhất môn)
+
+> Sắp theo mức ưu tiên. Nếu ít thời gian, học từ trên xuống.
+
+**🔴 CAO – gần như chắc chắn:**
+1. **Pipeline GATK tổng thể**: vẽ được `FASTQ → (BWA map → MarkDuplicates → BQSR) → BAM → HaplotypeCaller/Mutect2 → VCF → filter → annotation`, kèm **tên công cụ mỗi bước**.
+2. **Tiền xử lý 3 bước** (Map→MarkDup→BQSR) – đúng thứ tự; **BQSR cần known-sites (dbSNP)**.
+3. **HaplotypeCaller 4 giai đoạn** (active region → reassembly De Bruijn/Smith-Waterman → PairHMM likelihood → Bayes genotype).
+4. **GVCF workflow** (HaplotypeCaller -ERC GVCF → GenomicsDBImport → GenotypeGVCFs → VQSR) & **N+1 problem**.
+5. **Germline vs Somatic** (di truyền/mọi tế bào ↔ chỉ khối u); **Mutect2 Tumor-Normal**, vai trò **PoN** & **germline resource (gnomAD)**.
+6. **Strand bias vs Orientation bias**, **F1R2 vs F2R1** (artifact FFPE).
+7. **Định dạng dữ liệu** FASTA/FASTQ(+Phred)/SAM/BAM/VCF/GVCF.
+8. **Sequencing tech**: Illumina (short, chính xác) vs PacBio/Nanopore (long, lỗi cao); **WGS vs WES (~1,4%)**, paired-end.
+9. **Nonsense/Missense/Frameshift** + công cụ annotation (**Funcotator, VEP**).
+10. **EVE vs AlphaMissense** (Bayesian VAE, không nhãn ↔ fine-tune AlphaFold/transformer).
+11. **5 ứng dụng GenAI** ghép mô hình: PopVAE, phyloGAN, artificial genomes, EVE, AlphaFold.
+
+**🟡 TB – nên nắm:**
+12. **VQSR vs CNNScoreVariants vs Hard filtering** (cohort/ML ↔ deep learning single-sample ↔ ngưỡng cứng); **VQSLOD**, tranche.
+13. **Somatic CNV pipeline** (DenoiseReadCounts→ModelSegments→CallCopyRatioSegments), copy ratio, penalty λ.
+14. **CalculateContamination** (GetPileupSummaries → HOM-VAR ở normal), **LearnReadOrientationModel**.
+15. **GAN vs WGAN** (JS ↔ Wasserstein/Critic), **VAE vs Bayesian VAE** (ELBO, uncertainty).
+16. Số liệu HGP ($3 tỷ, 1990–2003), **DGV4VN** (1000 người Kinh), Ti/Tv.
+
+**🎯 Bẫy hay gặp Chương 4:** đảo germline↔somatic; sai thứ tự pipeline (BQSR trước MarkDup); gán CNNScoreVariants cho cohort (thực ra tốt cho single-sample); nói VQSR chạy chung SNP+INDEL (phải **riêng**); EVE dùng nhãn (thực ra **không** dùng nhãn).
+
+---
+
+## 4.16. Câu hỏi ôn tập nhanh
 1. Phân biệt **germline vs somatic**, **SNV/indel vs structural variant**. WGS vs WES?
 2. So sánh **Illumina / PacBio / Nanopore**. Paired-end để làm gì?
 3. Vẽ **pipeline tiền xử lý GATK** (3 bước). BQSR làm gì, cần gì?
