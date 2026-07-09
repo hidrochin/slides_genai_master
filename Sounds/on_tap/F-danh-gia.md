@@ -109,3 +109,37 @@ WER = (S + D + I) / N
 ## 7. Thách thức đánh giá & xu hướng
 
 Cross-metric trade-off (cân bằng nhiều ưu tiên) · tính **chủ quan** của human judgment · **đạo đức** (bias & fairness) · xu hướng mới: **explainable AI (XAI)**, **multimodal evaluation**, **LLM as a judge**.
+
+---
+
+## 🎓 Mở rộng nâng cao (trình độ thạc sĩ — ngoài slide)
+
+### N1. WER = khoảng cách Levenshtein chuẩn hoá
+- S, D, I lấy từ **alignment tối ưu** = **edit distance** giữa ref và hyp, tính bằng **quy hoạch động**:
+```
+D[i,j] = min( D[i-1,j]+1 (del), D[i,j-1]+1 (ins), D[i-1,j-1]+ (0 nếu w_i=ŵ_j else 1) (sub) )
+WER = D[N,M] / N          (N = |ref|)
+```
+- **Tính chất phải nhớ:** (i) **không đối xứng** (WER(a,b)≠WER(b,a)); (ii) **có thể > 100%** khi I lớn ([H-Câu18](../trac_nghiem/H-nhan-dang-tieng-noi.md)); (iii) **phạt lỗi nhỏ = lỗi lớn**, mù ngữ nghĩa (nên bổ sung **semantic metrics** như embedding similarity, hoặc downstream task accuracy).
+- **Micro vs macro:** báo cáo chuẩn là **micro** `Σ(S+D+I)/ΣN` (không phải trung bình WER câu — câu ngắn bị trọng số lớn, [F-Câu17](../trac_nghiem/F-danh-gia.md)).
+
+### N2. Kiểm định ý nghĩa thống kê (thiếu là sai lầm kinh điển)
+- Chênh WER nhỏ có thể do ngẫu nhiên ⇒ phải test trước khi tuyên bố cải thiện:
+  - **MAPSSWE** (matched-pairs, chuẩn NIST) · **bootstrap** (resample utterance, lấy CI 95%) · **McNemar** (cho lỗi nhị phân).
+- Quy tắc thực hành: kèm **khoảng tin cậy**; hai CI chồng lấn ⇒ chưa đủ bằng chứng B > A ([F-Câu21](../trac_nghiem/F-danh-gia.md)).
+
+### N3. MOS như một phép đo có sai số
+- MOS là **trung bình đánh giá chủ quan** → phải kèm **CI 95%** và đủ số rater (ITU-T P.800). **Không so MOS tuyệt đối giữa hai study** (khác cohort/mẫu/thiết bị/hướng dẫn) — chỉ so **trong cùng phiên nghe** ([F-Câu18](../trac_nghiem/F-danh-gia.md)); dùng **CMOS/ABX** để so cặp.
+- Nguồn thiên lệch: **anchoring, order effect, listener fatigue, calibration** khác nhau giữa người nghe → randomize thứ tự, chèn **anchor** (mẫu chuẩn), lọc rater kém tin cậy (correlation với đồng thuận).
+
+### N4. Verification: ROC/DET, EER, minDCF, hiệu chỉnh
+- Quét ngưỡng → đường **DET/ROC**; **EER** = điểm `FAR=FRR` (một con số tóm tắt, nhưng không nói điểm vận hành thực).
+- Thực tế dùng **minDCF** (Detection Cost Function): `DCF = C_miss·P_miss·P_target + C_fa·P_fa·(1−P_target)` — trọng số theo **chi phí** và **tần suất** kẻ tấn công (ngân hàng: C_fa lớn ⇒ ngưỡng chặt). Kèm **anti-spoofing → t-DCF**.
+- **Calibration** (điểm → xác suất/LLR) quan trọng khi hợp nhiều hệ; đo bằng **Cllr**.
+
+### N5. Công thức MCD & perplexity
+- **MCD** (dB): `MCD = (10/ln10)·√( 2·Σ_{d=1}^{D} (c_d − ĉ_d)² )`, c = mel-cepstral coeffs (bỏ c₀ năng lượng); parallel + **DTW** để căn thời gian. Thấp = gần bản thật.
+- **Perplexity** của LM: `PP = 2^{H}` với `H = −(1/N)Σ log₂ P(w_i|·)` (cross-entropy bit/từ). Thấp = LM tốt ([I-bài-tập Câu 19](I-bai-tap-tinh-toan.md)). Đây là proxy nội tại; giảm PP không luôn giảm WER (mismatch train/decode).
+
+### N6. Objective ≠ Subjective — vì sao vẫn cần người
+- MCD/RTF/cosine chỉ là **proxy**; tương quan với MOS **không hoàn hảo** (một hệ MCD thấp vẫn có thể nghe kém tự nhiên do lỗi prosody/artifact vocoder). ⇒ quy trình chuẩn: **objective để lặp nhanh + subjective (MOS/CMOS) để chốt**. Metric học được (**UTMOS, DNSMOS, NISQA**) đang thu hẹp khoảng cách nhưng vẫn cần kiểm định.

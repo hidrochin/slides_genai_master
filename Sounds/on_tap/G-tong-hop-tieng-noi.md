@@ -130,3 +130,37 @@ Kết hợp với RVQ giúp NAR chỉ cần sinh **mã discrete** (thay vì mel 
 - **Prosody Modeling** → style/emotion tags, style transfer / reference encoder.
 
 **Tóm tắt tiến hoá:** Concatenative → Statistical Parametric → **Neural TTS** (ngày càng dựa **generative models**). Mainstream = **acoustic model + vocoder tách biệt**, nhưng **fully E2E đang nổi lên**. Mục tiêu chính: **tăng chất lượng, giảm chi phí**.
+
+---
+
+## 🎓 Mở rộng nâng cao (trình độ thạc sĩ — ngoài slide)
+
+### N1. TTS là bài toán sinh có điều kiện (conditional generation)
+- Mục tiêu: học `p(speech | text, speaker, style)` — vì one-to-many nên **phải là mô hình sinh**, không phải hồi quy điểm (regression về mel L1/L2 → ra giọng "trung bình", **over-smoothing**, mờ đục). Đây là lý do TTS hiện đại chuyển sang các họ **generative** dưới đây.
+- **AR factorization:** `p(y)=Π_t p(y_t|y_{<t})`. Train **teacher forcing** → suy diễn tự hồi quy sinh **exposure bias** (lỗi tích luỹ) → skip/repeat ([G-Câu17](../trac_nghiem/G-tong-hop-tieng-noi.md)).
+
+### N2. Bốn họ mô hình sinh — so sánh (rất hay hỏi)
+| Họ | Đại diện TTS | Cơ chế | Đánh đổi |
+|---|---|---|---|
+| **Autoregressive** | Tacotron2, VALL-E | `Π p(y_t\|y_<t)` | Chất lượng/prosody cao, **chậm**, exposure bias |
+| **Flow (chuẩn hoá)** | Glow-TTS, VITS | Biến đổi khả nghịch, **likelihood chính xác**, sinh song song | Kiến trúc ràng buộc khả nghịch |
+| **VAE** | (trong VITS) | Latent + ELBO | Dễ mờ (posterior collapse) nếu không khéo |
+| **Diffusion/Score** | Grad-TTS, DiffWave | Khử nhiễu nhiều bước | Chất lượng cao, train ổn định, **inference chậm** (trừ distill) |
+| **GAN** | HiFi-GAN (vocoder) | Adversarial, 1 forward | **Nhanh/real-time**, train dễ bất ổn |
+
+### N3. Bài toán alignment & duration
+- **AR + attention** học alignment ngầm (dễ lỗi). **NAR** cần **duration tường minh**: **FastSpeech** dùng length regulator + duration predictor; **Glow-TTS/VITS** dùng **MAS (Monotonic Alignment Search)** — quy hoạch động tìm alignment đơn điệu tối ưu hoá likelihood, **không cần external aligner**. Đây là bước nhảy giúp NAR ổn định + nhanh.
+
+### N4. Vocoder: bài toán khôi phục pha
+- Mel-spectrogram **bỏ pha** → vocoder phải **tái tạo pha** để ra waveform. **Griffin-Lim** = lặp ước lượng pha (robotic). **Neural vocoder** học ánh xạ mel→waveform:
+  - **WaveNet** (AR, dilated causal conv) — chất lượng cao, chậm.
+  - **HiFi-GAN** — GAN với **Multi-Period + Multi-Scale Discriminator** bắt cấu trúc tuần hoàn (harmonic) và đa phân giải → real-time, tự nhiên.
+- **Vì sao vocoder quyết định naturalness** dù mel đúng: pha & chi tiết high-freq do vocoder sinh ([G-Câu19](../trac_nghiem/G-tong-hop-tieng-noi.md)).
+
+### N5. Neural audio codec & codec LM (VALL-E hoá bài toán TTS)
+- **EnCodec/SoundStream:** nén waveform thành **token rời rạc** qua **RVQ** (nhiều tầng residual, [§7.1]). Bitrate ≈ `n_q × (f_s/hop) × log₂(codebook)` bit/s.
+- **VALL-E:** coi TTS như **language modeling trên token audio** (dự đoán mã RVQ) thay vì hồi quy mel → tận dụng sức mạnh LM (in-context/zero-shot cloning từ prompt 3s). Tách **AR cho tầng RVQ đầu (prosody)** + **NAR cho tầng residual (chi tiết)**.
+
+### N6. Điều khiển prosody & phong cách
+- **GST (Global Style Tokens)** / **reference encoder:** rút style từ audio tham chiếu (unsupervised) → điều khiển biểu cảm. **VITS** hợp nhất acoustic model + vocoder + flow + VAE + adversarial thành **một E2E** (text→waveform) — kiến trúc tham chiếu hiện đại.
+- **Tiếng Việt:** thanh điệu = **F0 contour mang nghĩa từ vựng** → phải mô hình hoá tường minh (tonophone/đặc trưng thanh), không để vocoder "đoán" ([G-Câu21](../trac_nghiem/G-tong-hop-tieng-noi.md)); prosody đa tầng (thanh × ngữ điệu câu) là thách thức riêng.

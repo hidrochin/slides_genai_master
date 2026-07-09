@@ -1,6 +1,8 @@
 # ONE-PAGER — Ôn nước rút Tạo sinh Âm thanh (liếc trước giờ thi)
 
-Tổng hợp & Nhận dạng Tiếng nói. Chi tiết ở: [A-tổng-quan](A-tong-quan.md) · [B-ngữ-âm-học](B-ngu-am-hoc.md) · [C-tiếng-Việt](C-am-vi-tieng-viet.md) · [D-DSP](D-xu-ly-tin-hieu.md) · [E-dữ-liệu](E-du-lieu.md) · [F-đánh-giá](F-danh-gia.md) · [G-tổng-hợp](G-tong-hop-tieng-noi.md) · [H-nhận-dạng](H-nhan-dang-tieng-noi.md)
+Tổng hợp & Nhận dạng Tiếng nói. Chi tiết ở: [A-tổng-quan](A-tong-quan.md) · [B-ngữ-âm-học](B-ngu-am-hoc.md) · [C-tiếng-Việt](C-am-vi-tieng-viet.md) · [D-DSP](D-xu-ly-tin-hieu.md) · [E-dữ-liệu](E-du-lieu.md) · [F-đánh-giá](F-danh-gia.md) · [G-tổng-hợp](G-tong-hop-tieng-noi.md) · [H-nhận-dạng](H-nhan-dang-tieng-noi.md) · **[I-thực-hành/kinh-nghiệm](I-thuc-hanh-kinh-nghiem.md)**
+
+> **Ngoài lý thuyết slide, xem thêm:** [Playbook thực chiến ASR/MDD/SLU/Speaker/dữ liệu](I-thuc-hanh-kinh-nghiem.md) (chọn model theo nguyên lý, làm A không làm B) · [Bài tập tính toán khó→cực khó](../trac_nghiem/I-bai-tap-tinh-toan.md) (file size, Nyquist, F0, WER, RTF, dB, perplexity…).
 
 ---
 
@@ -86,3 +88,15 @@ Tổng hợp & Nhận dạng Tiếng nói. Chi tiết ở: [A-tổng-quan](A-ton
 - CD sample rate **44.1 kHz** → bắt tới **22.05 kHz**.
 - Face IoU > **0.5** (face stream, Vietnam-Celeb).
 - Dataset: ASR (LibriSpeech, CommonVoice, TEDLIUM, VoxPopuli) · Speaker (VoxCeleb, DIHARD) · TTS (VCTK, LibriTTS) · SER (IEMOCAP, MELD).
+
+---
+
+## 🛠️ THỰC CHIẾN — chọn nhanh (chi tiết ở [I-playbook](I-thuc-hanh-kinh-nghiem.md))
+
+**Chọn model ASR:** streaming/on-device → **RNN-T/Conformer** · offline chất lượng cao, đa ngôn ngữ → **Whisper/AED** · low-resource fine-tune → **wav2vec2/XLSR + CTC + LM**.
+
+**Bài toán → metric:** ASR → WER/CER · MDD → GOP + precision/recall lỗi · Speaker Verification (1-1) → **EER** · Identification (1-N) → accuracy/top-k · Diarization → DER · SER → **UAR/macro-F1** (không dùng accuracy vì lệch lớp) · TTS → MOS/CMOS + MCD/RTF.
+
+**3 lỗi kinh điển phải tránh:** ① split ngẫu nhiên theo câu (leakage giọng — phải **split theo speaker**) · ② so WER khi chuẩn hoá text khác nhau · ③ tuyên bố cải thiện khi chênh WER nhỏ mà **chưa test ý nghĩa thống kê**.
+
+**MDD ≠ ASR:** MDD có *canonical transcript*, chấm phát âm mức phone (GOP) + **chẩn đoán** kiểu lỗi — không dùng WER. **SLU:** cascade (dễ debug, lỗi ASR trôi xuống) vs E2E (giữ ngữ điệu, đói dữ liệu).

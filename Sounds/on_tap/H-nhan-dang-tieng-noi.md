@@ -120,3 +120,46 @@
 **Giải pháp:** Deep Learning (Transformer & biến thể); Optimized/diverse training data; tích hợp **ML + NLP**; **context-awareness**; với rare word/proper name → **expand training data**, **transfer learning**, tích hợp **NER (Named Entity Recognition)**, tối ưu model/algorithm.
 
 **Xu hướng ASR:** Self-supervised Learning · Multi-language ASR · Robustness & Adaptability · Context-aware · Personalized ASR · tích hợp AI & NLP.
+
+---
+
+## 🎓 Mở rộng nâng cao (trình độ thạc sĩ — ngoài slide)
+
+### N1. Noisy channel & vì sao có LM
+- ASR = **kênh nhiễu**: người nói phát `W`, kênh (âm học + thu) biến thành `X`; ta khôi phục `Ŵ = argmax P(W|X)`. Bayes: `P(W|X) ∝ P(X|W)·P(W)` (bỏ `P(X)` vì cố định).
+- **LMSF** giải bất đối xứng thực nghiệm: `score = log P(X|W) + λ·log P(W) + η·|W|` (thêm **word insertion penalty** η). AM đánh giá thấp `P(X|W)` do **giả định độc lập frame/phone** → cần λ cân lại.
+
+### N2. GMM-HMM: sinh mô hình, EM, Viterbi
+- **HMM** cho mỗi phone (thường 3 state trái→phải): tham số = xác suất **chuyển** `a_{ij}` + **phát xạ** `b_j(x)` (GMM). Triphone để bắt **coarticolation phụ thuộc ngữ cảnh** ([B §N5](B-ngu-am-hoc.md)); state tying (senones) để giảm tham số.
+- **Train = Baum–Welch (EM):** forward–backward tính posterior chiếm state γ, cập nhật a,b (không cần alignment tay). **Forced alignment** = Viterbi với transcript đã biết.
+- **Decode = Viterbi:** quy hoạch động tìm đường state khả dĩ nhất `δ_t(j)=max_i δ_{t-1}(i)a_{ij}b_j(x_t)`, `O(T·S²)`.
+- **WFST decoding:** hợp thành `HCLG = H∘C∘L∘G` (HMM ∘ context ∘ lexicon ∘ grammar) thành một đồ thị giải mã tối ưu — kiến trúc Kaldi.
+
+### N3. CTC — toán học
+- Đặt path `π` (dài T trên vocab + blank); `B` = collapse (bỏ lặp rồi bỏ blank). Xác suất chuỗi `y`:
+```
+P(y|X) = Σ_{π ∈ B⁻¹(y)} Π_t P(π_t | X_t)     (giả định độc lập theo frame)
+Loss  = − log P(y|X)   ← tính bằng forward–backward động (O(T·|y|))
+```
+- **Giả định độc lập frame** (Problem 2) ⇒ CTC có **internal LM yếu** → cần LM ngoài. **Peaky behavior:** posterior dồn vào vài frame, phần lớn ra blank.
+
+### N4. RNN-T — lattice T×U
+- Sinh trên **lưới 2 chiều** `(t, u)`: mỗi ô Joiner(f_t, g_u) cho phân phối trên (nhãn ∪ ∅); ∅ = "tiến thời gian", nhãn = "tiến token". Loss = `−log Σ` mọi đường từ (0,0)→(T,U) (forward–backward 2D).
+- **Chi phí:** activation tensor `T×U×V` rất lớn ⇒ khó train (function-merging, gradient checkpointing). Predictor = **internal LM** (autoregressive) → context-aware, hợp streaming.
+
+### N5. AED/LAS & bẫy huấn luyện
+- Factorization `P(y|X)=Π_u P(y_u|y_{<u},X)`, attention align. **Exposure bias** (train teacher-forcing, infer tự do) → dùng **scheduled sampling**; **label smoothing** chống overconfident; thường **hybrid CTC/attention** (đa nhiệm, CTC ép monotonic giúp attention hội tụ).
+
+### N6. SSL — mục tiêu tự giám sát khác nhau (rất hay hỏi so sánh)
+| Model | Tín hiệu học | Cơ chế |
+|---|---|---|
+| **wav2vec 2.0** | Contrastive | Che latent, phân biệt quantized target thật với distractor + **diversity loss** giữ codebook đa dạng |
+| **HuBERT** | Masked prediction | Dự đoán **nhãn cụm k-means** (target rời rạc, lặp lại tinh dần) ở vị trí bị che |
+| **WavLM** | Masked + denoising | HuBERT + trộn nhiễu/overlap → mạnh cho speaker/diarization |
+| **Whisper** | **Weakly-supervised** | 680k giờ (audio, text) web — không phải SSL thuần; robust & multilingual out-of-the-box |
+- Tinh thần chung: dùng **audio KHÔNG nhãn** học biểu diễn âm học/ngữ âm tổng quát → fine-tune với ít nhãn (low-resource friendly).
+
+### N7. Conformer & LM fusion
+- **Conformer** = Macaron FFN + **Self-attention (toàn cục)** + **Convolution (cục bộ)** → SOTA AM streaming/offline.
+- **Ghép LM:** **Shallow fusion** (cộng log P_LM lúc beam search) · **Deep/Cold fusion** (hợp nhất trạng thái LM khi train) · **Density-ratio / ILME** (trừ **internal LM** ước lượng của E2E rồi cộng external LM đúng cách) — quan trọng khi đổi domain.
+- **Decode & streaming:** **beam search** (giữ k giả thuyết) > greedy; **endpointing** quyết định lúc dừng; **lookahead/chunk** đánh đổi **latency ↔ WER** ([H-Câu23](../trac_nghiem/H-nhan-dang-tieng-noi.md)).

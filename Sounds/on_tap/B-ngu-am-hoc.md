@@ -113,3 +113,38 @@ Phụ âm phân loại theo **nơi luồng khí bị co thắt (constricted) nh�
   - Xuất hiện ở **ngữ cảnh ngữ âm khác nhau** (VD đầu âm tiết vs. cuối âm tiết).
 - Khác biệt giữa allophone diễn đạt bằng **luật âm vị học (phonological rules)**.
 - Ký hiệu: phoneme dùng `/ /`, allophone dùng `[ ]`. (Ứng dụng tiếng Việt → xem [C-tiếng-Việt](C-am-vi-tieng-viet.md).)
+
+---
+
+## 🎓 Mở rộng nâng cao (trình độ thạc sĩ — ngoài slide)
+
+### N1. Lý thuyết Nguồn–Lọc (Source–Filter Theory, Fant 1960) — nền tảng của mọi thứ
+Tiếng nói = **nguồn** (glottal source) ⊛ **lọc** (vocal tract) ⊛ **bức xạ môi** (lip radiation). Trong miền phổ (nhân thành cộng log):
+```
+log|Speech(f)| = log|Source(f)| + log|Filter(f)| + log|Radiation(f)|
+```
+- **Nguồn (thanh môn):** chuỗi xung tuần hoàn → phổ vạch tại **bội số F0** (fine structure), dốc **≈ −12 dB/octave**.
+- **Lọc (vocal tract):** cộng hưởng → **formant** (spectral envelope), độc lập tương đối với F0.
+- **Hệ quả then chốt:** **F0 (nguồn) và formant (lọc) TÁCH RỜI** → cùng một nguyên âm có thể nói ở nhiều cao độ (đổi F0) mà formant giữ nguyên. Đây là lý do nam/nữ/trẻ em nói "cùng nguyên âm" nghe khác pitch nhưng nhận diện được.
+
+### N2. Vocal tract như ống cộng hưởng — tính formant
+- Xấp xỉ vocal tract (dài `L ≈ 17.5 cm` ở nam) là **ống đều đóng một đầu** (thanh môn) hở một đầu (môi): cộng hưởng ở
+```
+Fₙ = (2n − 1)·c / (4L),  c ≈ 340 m/s
+```
+→ F1 ≈ 340/(4×0.175) ≈ **500 Hz**, F2 ≈ 1500 Hz, F3 ≈ 2500 Hz (nguyên âm trung tính schwa). Nữ/trẻ em L ngắn hơn → formant **cao hơn** (đây là lý do phải normalize formant theo speaker).
+- **Perturbation theory:** thu hẹp ống ở điểm áp suất cao → hạ formant; ở điểm vận tốc cao → nâng formant. Giải thích **F1↔height, F2↔backness** (đã nêu ở [B-Câu18](../trac_nghiem/B-ngu-am-hoc.md)).
+
+### N3. Đo lường thực tế (cách Praat làm)
+- **F0:** **autocorrelation** hoặc **cepstrum** — cepstrum = `IDFT(log|DFT(x)|)`; đỉnh ở **quefrency = 1/F0** tách nguồn (tuần hoàn) khỏi lọc (envelope trơn ở quefrency thấp). Đây là gốc chung với **cepstrum của MFCC** ([D §N5](D-xu-ly-tin-hieu.md)).
+- **Formant:** **LPC (Linear Predictive Coding)** — mô hình all-pole `H(z)=1/A(z)`; nghiệm của `A(z)` cho tần số & bandwidth formant. LPC chính là hiện thân số của source-filter (all-pole ≈ ống cộng hưởng không mất mát).
+
+### N4. Tri giác & tương phản (Auditory Phonetics định lượng)
+- **Categorical perception:** dọc continuum VOT (VD /ba/–/pa/), người nghe **phân loại rời rạc** quanh ranh giới ~25–30 ms, không nghe được biến thiên bên trong một loại.
+- **VOT** (Voice Onset Time): thời gian nhả–voicing; tiếng Anh /p,t,k/ có VOT dài (aspirated), /b,d,g/ ngắn/âm. Là **cue acoustic chính** cho tương phản voicing ở âm tắc.
+- **Critical bands / ERB:** tai phân giải tần theo băng tới hạn (cơ sở sinh học của **thang Mel/Bark**).
+
+### N5. Coarticulation & bất biến — vì sao ASR khó
+- **Coarticulation:** âm bị "nhoè" bởi âm lân cận (VD /d/ trong "dee" vs "doo" có burst khác nhau) → **không có bất biến acoustic 1-1 cho phoneme** (lack of invariance problem).
+- **Locus theory:** transition của F2 hướng về một "locus" đặc trưng cho place of articulation → dùng để đọc phụ âm trên spectrogram (phụ âm không có formant riêng, chỉ để lại **transition** trên nguyên âm lân cận — nối [§7.4]).
+- Hệ quả kỹ thuật: đây chính là lý do ASR cần **mô hình phụ thuộc ngữ cảnh** (triphone ở HMM, receptive field rộng ở Transformer) thay vì phân loại từng frame độc lập.

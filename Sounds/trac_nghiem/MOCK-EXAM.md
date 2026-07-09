@@ -1,6 +1,6 @@
-# MOCK EXAM — Đề tổng hợp Tạo sinh Âm thanh (30 câu, trộn cụm)
+# MOCK EXAM — Đề tổng hợp Tạo sinh Âm thanh (36 câu, trộn cụm)
 
-> **Cách dùng:** Đề mô phỏng thi thật — trộn ngẫu nhiên các cụm A→H, độ khó tăng dần, nhiều câu tính toán & **(Nhiều đáp án)**. Làm liền mạch, tự chấm cuối. Mục tiêu ≥ 24/30. Chi tiết lý thuyết ở thư mục [../on_tap/](../on_tap/00-ONE-PAGER.md).
+> **Cách dùng:** Đề mô phỏng thi thật — trộn ngẫu nhiên các cụm A→H, độ khó tăng dần, nhiều câu tính toán & **(Nhiều đáp án)**. Làm liền mạch, tự chấm cuối. Mục tiêu ≥ 29/36. **Phần I (Câu 1–30)** bám slide; **Phần II (Câu 31–36)** nâng cao: tính toán khó + thực chiến (ngoài slide). Chi tiết lý thuyết ở [../on_tap/](../on_tap/00-ONE-PAGER.md); kinh nghiệm ở [playbook](../on_tap/I-thuc-hanh-kinh-nghiem.md); luyện tính ở [I-bài-tập](I-bai-tap-tinh-toan.md).
 
 ---
 
@@ -414,3 +414,93 @@
 | E (Dữ liệu) | 19, 20, 26 |
 
 Sai câu nào → mở file on_tap tương ứng theo bảng. Ưu tiên ôn lại cụm sai ≥ 2 câu.
+
+---
+
+## PHẦN II — Nâng cao (Câu 31–36): tính toán khó + thực chiến
+
+**Câu 31.** (Cực khó) File 48 kHz, 16-bit, stereo, 2 phút. Kích thước không nén?
+- A. ≈ 23.04 MB
+- B. ≈ 11.52 MB
+- C. ≈ 184.3 MB
+- D. ≈ 46.08 MB
+
+<details><summary>Đáp án</summary>
+
+**A.** `48000 × 16 × 2 × 120 = 184 320 000 bit ÷ 8 = 23 040 000 byte ≈ 23.04 MB`. Bẫy C: quên ÷8; bẫy B: tính mono. Xem [I-bài-tập Câu 21](I-bai-tap-tinh-toan.md).
+</details>
+
+---
+
+**Câu 32.** (Cực khó) Reference 5 từ; ASR sinh 8 từ, khớp đúng 5 từ nhưng chèn thêm 3 (I=3, S=0, D=0). WER?
+- A. 60% (WER có thể lớn nhưng đây là 3/5 = 0.6)
+- B. 37.5% (chia cho số từ ASR = 8)
+- C. 0% (không có substitution/deletion)
+- D. 100% (mọi câu chèn thừa đều là 100%)
+
+<details><summary>Đáp án</summary>
+
+**A.** `WER = (0+0+3)/5 = 0.6 = 60%`. Mẫu số luôn là **N reference (5)**, không phải số từ ASR (B). Nếu I đủ lớn, WER **vượt 100%**. Xem [H-Câu18](H-nhan-dang-tieng-noi.md).
+</details>
+
+---
+
+**Câu 33.** (Cực khó) Cường độ nhiễu giảm còn 1/100 so với ban đầu (tín hiệu giữ nguyên). SNR tăng thêm bao nhiêu dB?
+- A. 20 dB
+- B. 100 dB
+- C. 2 dB
+- D. 40 dB
+
+<details><summary>Đáp án</summary>
+
+**A.** SNR ∝ P_signal/P_noise; noise ÷100 → tỉ lệ ×100 → `ΔSNR = 10·log₁₀(100) = 20 dB`. Với **power** dùng hệ số 10. Bẫy D: dùng 20 (của amplitude).
+</details>
+
+---
+
+**Câu 34.** (Khó) Xây trợ lý giọng nói **on-device, streaming, latency thấp**. Kiến trúc ASR hợp lý nhất?
+- A. Conformer/RNN-T — emit token-by-token, Predictor context-aware, chạy tăng dần khi audio tới
+- B. Whisper offline — chờ toàn bộ đoạn rồi decode một lần
+- C. AED/LAS attention — cần toàn bộ input, độ phức tạp O(mn)
+- D. GMM-HMM template matching cổ điển
+
+<details><summary>Đáp án</summary>
+
+**A.** Streaming/on-device ⇒ **RNN-T/Conformer** (incremental, monotonic, context-aware). Whisper & AED là **offline** (cần cả đoạn). Xem [playbook §1](../on_tap/I-thuc-hanh-kinh-nghiem.md).
+</details>
+
+---
+
+**Câu 35.** (Khó) MDD (chấm phát âm người học L2) khác ASR ở điểm cốt lõi nào?
+- A. MDD có canonical transcript, chấm mức phone (GOP) + chẩn đoán kiểu lỗi; ASR nhận dạng nội dung tự do, đo bằng WER
+- B. MDD và ASR giống hệt nhau, chỉ khác tên
+- C. MDD đo bằng WER còn ASR đo bằng GOP
+- D. MDD không cần acoustic model, chỉ cần language model
+
+<details><summary>Đáp án</summary>
+
+**A.** MDD biết người học *định* nói gì (**canonical**), so phone thực tế vs chuẩn bằng **GOP** và **chẩn đoán** (diagnosis) — không dùng WER. Xem [playbook §2](../on_tap/I-thuc-hanh-kinh-nghiem.md).
+</details>
+
+---
+
+**Câu 36.** (Cực khó) Chia dữ liệu ASR **ngẫu nhiên theo câu** khiến cùng speaker xuất hiện cả train lẫn test. Hệ quả?
+- A. Speaker leakage → WER test thấp giả, không phản ánh generalization; phải split theo speaker
+- B. Không sao vì nội dung câu khác nhau là đủ
+- C. Làm WER test cao giả khiến model trông tệ hơn thực
+- D. Chỉ ảnh hưởng thời gian train
+
+<details><summary>Đáp án</summary>
+
+**A.** Cùng giọng ở train+test → model "quen giọng" → **WER lạc quan giả**. Bắt buộc **split theo speaker** (và điều kiện thu). Xem [E-Câu16](E-du-lieu.md) và [playbook §4](../on_tap/I-thuc-hanh-kinh-nghiem.md).
+</details>
+
+---
+
+### Tự chấm Phần II
+| Chủ đề | Câu |
+|---|---|
+| Tính toán (size, WER, dB) | 31, 32, 33 |
+| Thực chiến (chọn model, MDD, leakage) | 34, 35, 36 |
+
+Sai Phần II → đọc kỹ [I-playbook](../on_tap/I-thuc-hanh-kinh-nghiem.md) và [I-bài-tập](I-bai-tap-tinh-toan.md).

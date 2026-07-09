@@ -1,7 +1,7 @@
-# TRẮC NGHIỆM — Cụm C: Âm vị học & Ngữ âm Tiếng Việt (14 câu)
-Nguồn: `02 - Linguistics and Phonetics` (2.2), `02 - Acoustic Phonetics`. Ôn kèm [C-tiếng-Việt](../on_tap/C-am-vi-tieng-viet.md).
+# TRẮC NGHIỆM — Cụm C: Âm vị học & Ngữ âm Tiếng Việt (18 câu)
+Nguồn: `02 - Linguistics and Phonetics` (2.2), `02 - Acoustic Phonetics` + G2P/chuẩn hoá thực tế. Ôn kèm [C-tiếng-Việt](../on_tap/C-am-vi-tieng-viet.md) và [playbook thực chiến](../on_tap/I-thuc-hanh-kinh-nghiem.md).
 
-> **Cách dùng:** Phương án dài bằng nhau, không tô đậm. **(Nhiều đáp án)** = chọn đủ. **(Khó)** = suy luận/bẫy.
+> **Cách dùng:** Phương án dài bằng nhau, không tô đậm. **(Nhiều đáp án)** = chọn đủ. **(Khó)/(Cực khó)** = suy luận/bẫy. Câu 15–18 nâng cao (G2P, phân rã tonophone, chuẩn hoá, đồng âm).
 
 ---
 
@@ -185,4 +185,56 @@ Nguồn: `02 - Linguistics and Phonetics` (2.2), `02 - Acoustic Phonetics`. Ôn 
 <details><summary>Đáp án</summary>
 
 **A.** Câu có thể tách "Học sinh | học | sinh học" (Pupils study biology) hoặc "Học sinh | học sinh | học" → **ambiguity trong word segmentation**, vì tiếng Việt dùng **cùng dấu cách** cho âm tiết lẫn từ. Đây là thách thức của Text Analysis trong TTS (xem [G](../on_tap/G-tong-hop-tieng-noi.md)).
+</details>
+
+---
+
+**Câu 15.** (Cực khó) Phân rã âm tiết "toán" thành chuỗi tonophone (thanh sắc = thanh 5) là gì?
+- A. [t], [w5], [a5], [n5] — âm đầu không gắn thanh, thanh phủ lên mọi thành phần của rhyme
+- B. [t5], [w5], [a5], [n5] — thanh gắn vào cả âm đầu
+- C. [t], [w], [a], [n] — không gắn thanh vào đâu cả
+- D. [toán] — giữ nguyên âm tiết, không phân rã
+
+<details><summary>Đáp án</summary>
+
+**A.** "toán" = t (âm đầu) + o→**âm đệm /w/** + a (âm chính) + n (âm cuối) + **thanh sắc (5)**. Quy tắc tonophone: gắn thanh vào **mọi thành phần của rhyme** (đệm, chính, cuối) nhưng **KHÔNG** gắn vào **âm đầu** → [t], [w5], [a5], [n5]. B sai (gắn cả âm đầu), C sai (bỏ thanh mất nghĩa). Xem [Câu 11](#).
+</details>
+
+---
+
+**Câu 16.** (Khó) Hệ thanh Hà Nội gồm 6 thanh. Bộ tên nào ĐÚNG?
+- A. Ngang (không dấu), Huyền, Ngã, Hỏi, Sắc, Nặng
+- B. Ngang, Huyền, Sắc, Nặng, Hỏi, Bằng
+- C. Bổng, Trầm, Ngang, Sắc, Nặng, Hỏi
+- D. Sắc, Nặng, Huyền, Trắc, Bằng, Ngang
+
+<details><summary>Đáp án</summary>
+
+**A.** 6 thanh chuẩn: **ngang – huyền – ngã – hỏi – sắc – nặng**. "Bằng/trắc" (B, D) là phân loại **luật thơ** (bằng = ngang+huyền; trắc = còn lại), không phải tên thanh. "Bổng/trầm" (C) là mô tả cao độ, không phải tên thanh.
+</details>
+
+---
+
+**Câu 17.** (Cực khó) Trong phương ngữ Hà Nội, các âm đầu "d", "gi", "r" gây khó cho G2P chủ yếu vì lý do nào?
+- A. Cả ba thường phát âm thành /z/ → đồng âm khác chữ (VD "da/gia/ra") ⇒ chữ→âm dễ nhưng âm→chữ nhập nhằng
+- B. Cả ba đều câm, không phát âm nên bỏ khỏi phiên âm
+- C. Cả ba luôn phát âm khác nhau hoàn toàn nên G2P không có vấn đề
+- D. Ba chữ này chỉ xuất hiện trong từ vay mượn
+
+<details><summary>Đáp án</summary>
+
+**A.** Giọng Bắc gộp **d, gi, r → /z/** (giọng Nam giữ phân biệt hơn). Hệ quả: **G2P (chữ→âm)** khá xác định, nhưng **STT/chính tả (âm→chữ)** nhập nhằng vì nhiều chữ cùng âm ("da – gia – ra"). Đây là nguồn lỗi chính tả điển hình cho ASR tiếng Việt (cần LM/ngữ cảnh phân biệt). B, C, D sai thực tế.
+</details>
+
+---
+
+**Câu 18.** (Khó) Text normalization tiếng Việt phải xử lý chuỗi "15/3" theo ngữ cảnh thế nào?
+- A. Có thể là "mười lăm tháng ba" (ngày) hoặc "mười lăm phần ba" / "mười lăm trên ba" (phân số/tỉ số) — cần ngữ cảnh để chọn
+- B. Luôn đọc là "mười lăm gạch ba" bất kể ngữ cảnh
+- C. Bỏ qua vì số không thuộc phạm vi TTS
+- D. Luôn đọc từng ký tự "một năm ba"
+
+<details><summary>Đáp án</summary>
+
+**A.** "15/3" **đa nghĩa**: ngày tháng, phân số, tỉ số, số hiệu… → **text normalization** phải dựa ngữ cảnh (và loại token) để bung đúng cách đọc trước G2P. Đây là bước frontend TTS/ASR hay bị lỗi. B, C, D đều là cách xử lý ngây thơ, sai trong thực tế.
 </details>

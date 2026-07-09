@@ -1,7 +1,7 @@
-# TRẮC NGHIỆM — Cụm G: Tổng hợp Tiếng nói / TTS (16 câu)
-Nguồn: `06 - Speech Synthesis`. Ôn kèm [G-tổng-hợp](../on_tap/G-tong-hop-tieng-noi.md).
+# TRẮC NGHIỆM — Cụm G: Tổng hợp Tiếng nói / TTS (21 câu)
+Nguồn: `06 - Speech Synthesis` + kiến thức mô hình TTS hiện đại. Ôn kèm [G-tổng-hợp](../on_tap/G-tong-hop-tieng-noi.md) và [playbook thực chiến](../on_tap/I-thuc-hanh-kinh-nghiem.md).
 
-> **Cách dùng:** Phương án dài bằng nhau, không tô đậm. **(Nhiều đáp án)** = chọn đủ. **(Khó)** = phân biệt bẫy.
+> **Cách dùng:** Phương án dài bằng nhau, không tô đậm. **(Nhiều đáp án)** = chọn đủ. **(Khó)/(Cực khó)** = phân biệt bẫy/suy luận sâu. Câu 17–21 nâng cao (attention failure, duration model, vocoder trade-off).
 
 ---
 
@@ -213,4 +213,69 @@ Nguồn: `06 - Speech Synthesis`. Ôn kèm [G-tổng-hợp](../on_tap/G-tong-hop
 <details><summary>Đáp án</summary>
 
 **A, B, C.** Ba cặp thách thức-giải pháp đúng cho tiếng Việt. D sai (thanh điệu là bắt buộc, bỏ đi sẽ sai nghĩa — xem [C](../on_tap/C-am-vi-tieng-viet.md)); E là bịa, sample rate không giải quyết segmentation/prosody.
+</details>
+
+---
+
+**Câu 17.** (Cực khó) TTS tự hồi quy dựa attention (kiểu Tacotron) hay gặp các lỗi đặc trưng nào, và hướng khắc phục là gì?
+- A. Bỏ từ / lặp từ / lẩm bẩm do attention lệch; khắc phục bằng duration predictor tường minh (FastSpeech) hoặc monotonic alignment
+- B. Chỉ gặp lỗi sai thanh điệu, khắc phục bằng tăng sample rate
+- C. Không bao giờ lỗi vì attention luôn học được alignment hoàn hảo
+- D. Lỗi vỡ tiếng do vocoder, khắc phục bằng bỏ acoustic model
+
+<details><summary>Đáp án</summary>
+
+**A.** Attention mềm có thể **skip** (nhảy chữ), **repeat** (lặp), hoặc **mumble** khi alignment trôi, nhất là câu dài/ngoài phân bố. Các model **non-autoregressive** như **FastSpeech** thay attention bằng **duration predictor** (biết mỗi phoneme kéo dài bao nhiêu frame) → alignment ổn định, song song, nhanh. B, C, D sai bản chất.
+</details>
+
+---
+
+**Câu 18.** (Khó) Khác biệt cốt lõi giữa Tacotron 2 và FastSpeech 2 về cách xác định độ dài mỗi âm là gì?
+- A. Tacotron 2 dùng attention học ngầm alignment (autoregressive); FastSpeech 2 dùng duration predictor tường minh + sinh song song
+- B. Cả hai đều autoregressive và dùng attention giống hệt nhau
+- C. FastSpeech 2 autoregressive còn Tacotron 2 song song
+- D. Cả hai đều là vocoder, không phải acoustic model
+
+<details><summary>Đáp án</summary>
+
+**A.** Cả hai đều là **acoustic model** (text → mel), nhưng **Tacotron 2** *autoregressive* + attention (học alignment ngầm, chậm, dễ lỗi skip/repeat), còn **FastSpeech 2** *non-autoregressive* + **duration predictor** (biết trước độ dài mỗi phoneme → sinh song song, nhanh & ổn định, thêm predictor cho pitch/energy). B, C đảo tính chất; D sai (đều không phải vocoder).
+</details>
+
+---
+
+**Câu 19.** (Khó) Vì sao chất lượng vocoder nhiều khi quyết định độ tự nhiên nghe được nhiều hơn cả acoustic model?
+- A. Mel-spectrogram là biểu diễn mất mát (thiếu pha); vocoder phải "bù" pha & chi tiết waveform — vocoder kém sẽ tạo tiếng rè/kim loại dù mel đúng
+- B. Vocoder sinh cả nội dung ngôn ngữ nên sai từ là do vocoder
+- C. Acoustic model không ảnh hưởng chất lượng, chỉ vocoder quan trọng
+- D. Vocoder chỉ đổi định dạng file nên không ảnh hưởng âm thanh
+
+<details><summary>Đáp án</summary>
+
+**A.** Mel-spectrogram **bỏ thông tin pha** và nén tần số; vocoder tái tạo waveform phải khôi phục pha + chi tiết high-freq. Vocoder cổ (Griffin-Lim) → robotic/kim loại; neural (HiFi-GAN) → tự nhiên. Nên một mel "đúng" vẫn nghe tệ nếu vocoder yếu. B sai (nội dung do frontend/acoustic model), C, D cường điệu/sai.
+</details>
+
+---
+
+**Câu 20.** (Cực khó) Vocoder/model dựa diffusion (VD WaveGrad, DiffWave) đánh đổi điều gì so với GAN-based (HiFi-GAN)?
+- A. Diffusion cho chất lượng rất cao & train ổn định nhưng inference qua nhiều bước khử nhiễu → chậm hơn; GAN nhanh (1 lần forward) nhưng train dễ bất ổn
+- B. Diffusion nhanh hơn GAN vì chỉ cần một bước sinh duy nhất
+- C. GAN cho chất lượng thấp và luôn chậm hơn diffusion
+- D. Cả hai đều autoregressive như WaveNet nên tốc độ giống nhau
+
+<details><summary>Đáp án</summary>
+
+**A.** **Diffusion** khử nhiễu **nhiều bước** (chất lượng cao, train ổn định, nhưng inference chậm — trừ khi distill giảm bước). **GAN** sinh **một lần forward** (nhanh, real-time) nhưng huấn luyện dễ mất ổn định (mode collapse, cần cân generator/discriminator). B đảo tốc độ; D sai (không phải AR).
+</details>
+
+---
+
+**Câu 21.** (Khó) Khi làm TTS tiếng Việt, vì sao **không** được xử lý thanh điệu như thông tin phụ trợ có thể bỏ qua?
+- A. Thanh điệu mang nghĩa từ vựng — đổi thanh là đổi từ (ma/má/mà/mã/mạ); bỏ thanh → sai nghĩa, nên phải mã hoá vào đơn vị âm (tonophone)
+- B. Thanh điệu chỉ ảnh hưởng cảm xúc, bỏ đi vẫn đúng nghĩa
+- C. Thanh điệu tự sinh ra đúng từ ngữ cảnh nên không cần mô hình hoá
+- D. Thanh điệu chỉ là đặc trưng của chữ viết, không có trong âm thanh
+
+<details><summary>Đáp án</summary>
+
+**A.** Tiếng Việt là ngôn ngữ **thanh điệu**: F0 contour phân biệt **nghĩa từ vựng** (6 thanh Hà Nội). TTS phải mô hình hoá thanh (gắn vào rhyme qua **tonophone** — xem [C-Câu11](C-am-vi-tieng-viet.md)), không thể coi là phụ trợ. B, C, D đều phủ nhận vai trò ngữ nghĩa của thanh.
 </details>

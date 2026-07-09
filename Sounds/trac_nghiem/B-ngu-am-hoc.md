@@ -1,7 +1,7 @@
-# TRẮC NGHIỆM — Cụm B: Ngữ âm học Cấu âm & Âm học (16 câu)
-Nguồn: `01 - Articulatory Phonetics`, `02 - Linguistics and Phonetics`, `02 - Acoustic Phonetics`. Ôn kèm [B-ngữ-âm-học](../on_tap/B-ngu-am-hoc.md).
+# TRẮC NGHIỆM — Cụm B: Ngữ âm học Cấu âm & Âm học (21 câu)
+Nguồn: `01 - Articulatory Phonetics`, `02 - Linguistics and Phonetics`, `02 - Acoustic Phonetics`. Ôn kèm [B-ngữ-âm-học](../on_tap/B-ngu-am-hoc.md), bài tập tính ở [I-bài-tập](I-bai-tap-tinh-toan.md).
 
-> **Cách dùng:** Phương án dài bằng nhau, không tô đậm. Chọn trước rồi mở "Đáp án". **(Nhiều đáp án)** = chọn đủ mới đúng. **(Khó)** = suy luận/bẫy.
+> **Cách dùng:** Phương án dài bằng nhau, không tô đậm. Chọn trước rồi mở "Đáp án". **(Nhiều đáp án)** = chọn đủ mới đúng. **(Khó)/(Cực khó)** = suy luận/tính toán/bẫy. Câu 17–21 nâng cao (formant, VOT, dB, đọc spectrogram).
 
 ---
 
@@ -212,4 +212,69 @@ Nguồn: `01 - Articulatory Phonetics`, `02 - Linguistics and Phonetics`, `02 - 
 <details><summary>Đáp án</summary>
 
 **A, B, C, E.** Allophone là biến thể phoneme, không đổi nghĩa, phụ thuộc ngữ cảnh (VD đầu vs cuối âm tiết), diễn đạt bằng phonological rules. D sai: allophone ký hiệu bằng **ngoặc vuông [ ]**, còn **/ /** dùng cho phoneme.
+</details>
+
+---
+
+**Câu 17.** (Cực khó) Một dây thanh dao động với chu kỳ (period) 4 ms. F0 và hoạ âm bậc 3 (3rd harmonic) lần lượt là bao nhiêu?
+- A. F0 = 250 Hz; harmonic 3 = 750 Hz
+- B. F0 = 4 Hz; harmonic 3 = 12 Hz
+- C. F0 = 250 Hz; harmonic 3 = 250/3 ≈ 83 Hz
+- D. F0 = 40 Hz; harmonic 3 = 120 Hz
+
+<details><summary>Đáp án</summary>
+
+**A.** `F0 = 1/T = 1/0.004 s = 250 Hz`. Hoạ âm bậc n = **n × F0** → bậc 3 = 750 Hz. Bẫy C: chia thay vì nhân cho harmonic (harmonic là **bội số**, không phải ước số của F0); bẫy B: quên đổi ms → s.
+</details>
+
+---
+
+**Câu 18.** (Khó) Quan hệ giữa formant F1, F2 với đặc trưng nguyên âm là gì?
+- A. F1 tỉ lệ nghịch với độ cao lưỡi (nguyên âm cao → F1 thấp); F2 tăng khi lưỡi tiến ra trước (front → F2 cao)
+- B. F1 tỉ lệ thuận với độ cao lưỡi (nguyên âm cao → F1 cao); F2 giảm khi lưỡi ra trước
+- C. F1 quyết định backness, F2 quyết định voicing của nguyên âm
+- D. F1 và F2 chỉ phụ thuộc F0, không liên quan vị trí lưỡi
+
+<details><summary>Đáp án</summary>
+
+**A.** Quy tắc kinh điển: **F1 ↔ height (nghịch)** — nguyên âm cao /i/, /u/ có F1 **thấp**; nguyên âm thấp /a/ có F1 **cao**. **F2 ↔ backness** — nguyên âm trước /i/ có F2 **cao**, nguyên âm sau /u/ có F2 **thấp**. Đây là cơ sở đọc formant trên spectrogram và phân biệt nguyên âm. B đảo chiều F1.
+</details>
+
+---
+
+**Câu 19.** (Khó) VOT (Voice Onset Time) là đặc trưng cấu âm dùng chủ yếu để phân biệt điều gì?
+- A. Phụ âm tắc hữu thanh vs vô thanh (VD /b/ vs /p/) — khoảng thời gian từ lúc nhả hơi đến khi dây thanh bắt đầu rung
+- B. Nguyên âm trước vs sau
+- C. Thanh điệu cao vs thấp trong tiếng Việt
+- D. Âm mũi vs âm xát
+
+<details><summary>Đáp án</summary>
+
+**A.** **VOT** = độ trễ giữa lúc **nhả** phụ âm tắc (release burst) và lúc **voicing** bắt đầu. VOT ngắn/âm → hữu thanh (/b, d, g/); VOT dài → vô thanh có bật hơi (/p, t, k/). Là tín hiệu acoustic then chốt cho tương phản voicing (liên hệ [Câu 7](#): /b/–/p/).
+</details>
+
+---
+
+**Câu 20.** (Cực khó) Cường độ âm A gấp 100 lần cường độ âm B (theo intensity). Chênh lệch mức theo dB là bao nhiêu?
+- A. 20 dB
+- B. 100 dB
+- C. 2 dB
+- D. 40 dB
+
+<details><summary>Đáp án</summary>
+
+**A.** `ΔL = 10·log₁₀(I_A/I_B) = 10·log₁₀(100) = 10 × 2 = 20 dB`. Mỗi lần intensity ×10 = +10 dB, nên ×100 = +20 dB. Bẫy B: nhầm "gấp 100 lần" = 100 dB (quên hàm log); bẫy D: dùng hệ số 20 (đó là cho **amplitude/áp suất**, không phải intensity).
+</details>
+
+---
+
+**Câu 21.** (Khó) Trên spectrogram, âm xát (fricative như /s/) và âm tắc (stop như /t/) hiện lên khác nhau thế nào?
+- A. Fricative: dải nhiễu năng lượng cao ở tần số cao kéo dài; Stop: khoảng lặng (closure) rồi một burst ngắn đột ngột
+- B. Fricative: khoảng lặng rồi burst; Stop: nhiễu tần cao kéo dài
+- C. Cả hai đều hiện formant rõ như nguyên âm
+- D. Cả hai đều là khoảng lặng hoàn toàn, không phân biệt được
+
+<details><summary>Đáp án</summary>
+
+**A.** **Fricative** = luồng khí xoáy liên tục → **nhiễu tần số cao kéo dài** (VD /s/ tập trung >4 kHz). **Stop** = bịt kín (khoảng lặng/closure) rồi **bật (burst) ngắn**. Nhận diện hai pattern này giúp đọc phụ âm — vốn khó hơn nguyên âm vì thiếu formant riêng ([Câu 14](#)). B đảo hai mô tả.
 </details>

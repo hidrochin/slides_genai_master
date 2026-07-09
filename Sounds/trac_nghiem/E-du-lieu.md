@@ -1,7 +1,7 @@
-# TRẮC NGHIỆM — Cụm E: Dữ liệu Tiếng nói (15 câu)
-Nguồn: `04 - Dataset`. Ôn kèm [E-dữ-liệu](../on_tap/E-du-lieu.md).
+# TRẮC NGHIỆM — Cụm E: Dữ liệu Tiếng nói (20 câu)
+Nguồn: `04 - Dataset` + kinh nghiệm xây dữ liệu thực tế. Ôn kèm [E-dữ-liệu](../on_tap/E-du-lieu.md) và [playbook thực chiến](../on_tap/I-thuc-hanh-kinh-nghiem.md).
 
-> **Cách dùng:** Phương án dài bằng nhau, không tô đậm. **(Nhiều đáp án)** = chọn đủ. **(Khó)** = phân biệt bẫy.
+> **Cách dùng:** Phương án dài bằng nhau, không tô đậm. **(Nhiều đáp án)** = chọn đủ. **(Khó)/(Cực khó)** = phân biệt bẫy/suy luận sâu. Câu 16–20 nâng cao (leakage, chọn augmentation, SNR, rủi ro pseudo-label).
 
 ---
 
@@ -199,4 +199,69 @@ Nguồn: `04 - Dataset`. Ôn kèm [E-dữ-liệu](../on_tap/E-du-lieu.md).
 <details><summary>Đáp án</summary>
 
 **A.** Slide nêu xu hướng **LLM as a judge** cho đánh giá nhãn/chất lượng. Các phương án còn lại đi ngược best practices (vẫn cần benchmark, human-in-the-loop, dữ liệu đa dạng).
+</details>
+
+---
+
+**Câu 16.** (Cực khó) Xây tập test cho ASR, một kỹ sư chia ngẫu nhiên theo câu (utterance) nên cùng một người nói xuất hiện ở cả train và test. Hệ quả nghiêm trọng nhất là gì?
+- A. Speaker leakage → WER test lạc quan giả (model học "khớp giọng" quen), không phản ánh khả năng tổng quát; phải split **theo speaker**
+- B. Không ảnh hưởng gì vì nội dung câu khác nhau là đủ
+- C. Làm tăng WER test một cách giả tạo khiến model trông tệ hơn
+- D. Chỉ ảnh hưởng tốc độ train, không ảnh hưởng độ chính xác đo được
+
+<details><summary>Đáp án</summary>
+
+**A.** Cùng speaker ở train+test → model đã "quen giọng" → **WER thấp giả** (optimistic bias), sụp đổ khi gặp giọng mới. Nguyên tắc: **split theo speaker** (và theo phiên/điều kiện thu) để test đo đúng generalization. Tương tự phải chống trùng lặp nội dung (text overlap). B, C, D hiểu sai hướng và mức độ.
+</details>
+
+---
+
+**Câu 17.** (Khó) Chọn augmentation theo bài toán: phương án nào hợp lý nhất?
+- A. ASR chống nhiễu/xa mic → thêm noise + RIR + SpecAugment; Speaker verification → cẩn trọng với pitch/speed vì có thể phá đặc trưng giọng
+- B. Mọi bài toán speech đều nên dùng đúng một bộ augmentation giống hệt nhau
+- C. Speaker verification nên speed-perturb mạnh để đổi cao độ giọng cho đa dạng
+- D. ASR không bao giờ dùng augmentation vì làm sai transcript
+
+<details><summary>Đáp án</summary>
+
+**A.** Augmentation phải **khớp bất biến của bài toán**: ASR cần bất biến với nhiễu/phòng/che phổ → noise, RIR, SpecAugment tốt. Nhưng **speaker verification** dựa vào chính đặc trưng giọng (pitch, formant) → speed/pitch perturb mạnh có thể **xoá tín hiệu cần học** (C sai). D sai (ASR dùng augmentation rất nhiều, nhãn text không đổi khi thêm nhiễu/che phổ).
+</details>
+
+---
+
+**Câu 18.** (Khó) VAD/silence trimming quá "mạnh tay" có rủi ro gì cần cân nhắc?
+- A. Cắt nhầm phụ âm yếu/âm cuối nhẹ hoặc khoảng ngừng mang nghĩa (prosody) → hỏng transcript alignment và ngữ điệu
+- B. Không có rủi ro, cắt càng nhiều lặng càng tốt cho mọi trường hợp
+- C. Làm tăng kích thước file nên tốn lưu trữ
+- D. Chỉ ảnh hưởng TTS, không bao giờ ảnh hưởng ASR
+
+<details><summary>Đáp án</summary>
+
+**A.** VAD quá nhạy có thể cắt **phụ âm vô thanh yếu** (/f/, /s/ nhỏ), **âm cuối nhẹ**, hoặc **pause có nghĩa** (ranh giới câu, nhấn) → sai biên giới, hỏng prosody. Phải chỉnh ngưỡng + margin. B sai (đánh đổi thật), C ngược (trim làm **nhỏ** file), D sai (ảnh hưởng cả ASR).
+</details>
+
+---
+
+**Câu 19.** (Cực khó) Một đoạn thu có công suất tín hiệu (speech) = 400 đơn vị, công suất nhiễu nền = 4 đơn vị. SNR theo dB là bao nhiêu?
+- A. 20 dB
+- B. 100 dB
+- C. 2 dB
+- D. 40 dB
+
+<details><summary>Đáp án</summary>
+
+**A.** `SNR = 10·log₁₀(P_signal/P_noise) = 10·log₁₀(400/4) = 10·log₁₀(100) = 20 dB`. Với **power** dùng hệ số 10 (không phải 20 của amplitude). SNR ~20 dB là "khá sạch" cho ASR. Bẫy C: quên log (100 → nhầm ra nhỏ); bẫy D: dùng hệ số 20 của biên độ.
+</details>
+
+---
+
+**Câu 20.** (Khó) Pseudo-labeling (self-training) có rủi ro cố hữu nào và cách giảm thiểu?
+- A. Confirmation bias — model tự củng cố lỗi của chính nó; giảm bằng lọc theo confidence, dùng teacher mạnh hơn, và trộn dữ liệu có nhãn thật
+- B. Không có rủi ro vì nhãn do model sinh luôn chính xác
+- C. Làm mất toàn bộ dữ liệu có nhãn ban đầu
+- D. Chỉ dùng được khi đã có 100% dữ liệu gán nhãn tay
+
+<details><summary>Đáp án</summary>
+
+**A.** Model gán nhãn cho chính mình → nếu sai, **lỗi được khuếch đại** qua các vòng (confirmation bias). Giảm thiểu: **lọc confidence cao**, dùng **teacher lớn hơn** (VD Whisper sinh weak label), giữ tỉ lệ **dữ liệu nhãn thật**, và kiểm tra trên tập vàng. B sai (nhãn không hoàn hảo); D mâu thuẫn mục đích (pseudo-label dùng khi **thiếu** nhãn).
 </details>

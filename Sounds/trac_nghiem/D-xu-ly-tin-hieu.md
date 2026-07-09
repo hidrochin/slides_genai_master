@@ -1,19 +1,19 @@
-# TRẮC NGHIỆM — Cụm D: Xử lý Tín hiệu số (16 câu)
-Nguồn: `03 - Digital Signal Processing`. Ôn kèm [D-DSP](../on_tap/D-xu-ly-tin-hieu.md).
+# TRẮC NGHIỆM — Cụm D: Xử lý Tín hiệu số (22 câu)
+Nguồn: `03 - Digital Signal Processing`. Ôn kèm [D-DSP](../on_tap/D-xu-ly-tin-hieu.md). Bài tập tính nặng hơn ở [I-bài-tập](I-bai-tap-tinh-toan.md).
 
-> **Cách dùng:** Phương án dài bằng nhau, không tô đậm. **(Nhiều đáp án)** = chọn đủ. **(Khó)** = nhiều bước tính/phân biệt bẫy đơn vị. Nhớ: `Size = Sample rate × Bit depth × Channels × Duration`; `mức = 2^bit`; `1 byte = 8 bit`.
+> **Cách dùng:** Phương án dài bằng nhau, không tô đậm — mỗi phương án sai đều là một quan niệm sai hợp lý, không loại được bằng cảm giác. **(Nhiều đáp án)** = chọn đủ. **(Khó)/(Cực khó)** = nhiều bước tính/phân biệt bẫy đơn vị. Nhớ: `Size = Sample rate × Bit depth × Channels × Duration`; `mức = 2^bit`; `1 byte = 8 bit`; `SNR ≈ 6.02 × bit (dB)`.
 
 ---
 
-**Câu 1.** Hai bước cốt lõi của quá trình chuyển analog → digital (ADC) là gì?
-- A. Sampling (lấy mẫu) và Quantization (lượng tử hoá)
-- B. Compression và Decompression
-- C. Windowing và Fourier Transform
-- D. Encoding và Modulation
+**Câu 1.** Hai bước cốt lõi của quá trình chuyển analog → digital (ADC) rời rạc hoá tín hiệu trên hai trục nào, theo đúng vai trò?
+- A. Sampling rời rạc hoá trục **thời gian** (đọc giá trị tại các mốc đều), Quantization rời rạc hoá trục **biên độ** (làm tròn về mức gần nhất)
+- B. Sampling rời rạc hoá trục **biên độ**, Quantization rời rạc hoá trục **thời gian** — mỗi bước lo một trục nhưng ngược vai
+- C. Quantization làm tròn biên độ, còn Windowing chia tín hiệu thành các frame ngắn trước khi biến đổi Fourier
+- D. Sampling lấy mẫu theo thời gian, còn Encoding nén chuỗi mẫu thành bitstream để lưu file
 
 <details><summary>Đáp án</summary>
 
-**A.** ADC = **Sampling** (rời rạc hoá thời gian) + **Quantization** (rời rạc hoá biên độ). C là bước trích đặc trưng sau này (STFT), không phải ADC.
+**A.** ADC = **Sampling** (rời rạc hoá **thời gian**) + **Quantization** (rời rạc hoá **biên độ**). **B** đảo vai hai trục — bẫy kinh điển: nhiều người nhớ đúng tên hai bước nhưng gán nhầm trục. **C** thay một bước ADC bằng **Windowing** (thuộc bước **trích đặc trưng/STFT**, sau ADC). **D** thay bằng **Encoding** (nén, xảy ra **sau** khi đã có digital). Phải hiểu *bước nào làm gì trên trục nào* mới loại đủ.
 </details>
 
 ---
@@ -162,15 +162,15 @@ Nguồn: `03 - Digital Signal Processing`. Ôn kèm [D-DSP](../on_tap/D-xu-ly-ti
 
 ---
 
-**Câu 13.** Ba miền biểu diễn tín hiệu audio là gì?
+**Câu 13.** Ba miền biểu diễn (domain) tín hiệu audio là gì?
 - A. Time domain, Frequency domain, Time-Frequency domain
-- B. Analog, Digital, Hybrid
-- C. Mono, Stereo, Surround
-- D. Lossy, Lossless, Uncompressed
+- B. Time domain, Frequency domain, Cepstral domain (miền của MFCC)
+- C. Frequency domain, Mel domain, Time-Frequency domain
+- D. Time domain, Amplitude domain, Phase domain
 
 <details><summary>Đáp án</summary>
 
-**A.** **Time** (waveform theo thời gian), **Frequency** (thành phần tần số qua Fourier), **Time-Frequency** (đồng thời — nội dung tần số tiến hoá theo thời gian, VD spectrogram).
+**A.** **Time** (waveform theo thời gian), **Frequency** (thành phần tần số qua Fourier), **Time-Frequency** (nội dung tần số tiến hoá theo thời gian, VD spectrogram). Bẫy: **Cepstral** (B), **Mel** (C) là *biến đổi/thang* chứ không phải một trong ba miền nền tảng; **Amplitude/Phase** (D) là hai *thành phần* của một điểm phổ, không phải miền riêng.
 </details>
 
 ---
@@ -210,4 +210,82 @@ Nguồn: `03 - Digital Signal Processing`. Ôn kèm [D-DSP](../on_tap/D-xu-ly-ti
 <details><summary>Đáp án</summary>
 
 **A.** MFCC = biểu diễn **gọn** của power spectrum, gắn thang **Mel** (tri giác người), giảm dữ liệu nhiều chiều thành ít hệ số có nghĩa (qua khái niệm **cepstrum**). Không phải để tăng dữ liệu (B) hay chuyển thành text (D — đó là ASR).
+</details>
+
+---
+
+**Câu 17.** (Cực khó) Một tín hiệu thuần chứa thành phần 30 kHz được lấy mẫu ở 44.1 kHz mà **không** có anti-aliasing filter. Thành phần này sẽ xuất hiện (aliasing) ở tần số nào?
+- A. 14.1 kHz
+- B. 30 kHz — vẫn giữ nguyên vì dưới sample rate
+- C. 22.05 kHz — bị chặn đúng ở Nyquist frequency
+- D. 8.1 kHz
+
+<details><summary>Đáp án</summary>
+
+**A.** Nyquist freq = 22.05 kHz; 30 kHz **vượt** ngưỡng nên bị "gập" (fold): `f_alias = |f_s − f| = |44100 − 30000| = 14 100 Hz = 14.1 kHz`. Đây là lý do phải có **anti-aliasing low-pass filter** trước ADC. B sai (vượt Nyquist thì **không** giữ nguyên); C hiểu nhầm rằng vượt Nyquist bị "chặn" — thực tế nó *gập ngược* thành tần số giả.
+</details>
+
+---
+
+**Câu 18.** (Cực khó) Trích đặc trưng ASR trên đoạn audio 1 giây, 16 kHz, dùng frame 25 ms và hop (stride) 10 ms. Số frame thu được xấp xỉ bao nhiêu?
+- A. ≈ 98 frame
+- B. ≈ 100 frame
+- C. ≈ 40 frame
+- D. ≈ 400 frame
+
+<details><summary>Đáp án</summary>
+
+**A.** 25 ms = 400 mẫu (frame length), 10 ms = 160 mẫu (hop). `số frame = ⌊(16000 − 400)/160⌋ + 1 = ⌊97.5⌋ + 1 = 98`. Bẫy B: ước lượng thô "1000ms/10ms = 100" mà quên frame cuối không đủ chỗ; bẫy D: nhầm hop = 400 mẫu của **frame** thay vì 160 của **hop**.
+</details>
+
+---
+
+**Câu 19.** (Khó) Audio 16-bit có dynamic range (SNR lý thuyết) xấp xỉ bao nhiêu dB?
+- A. ≈ 96 dB
+- B. ≈ 16 dB
+- C. ≈ 48 dB
+- D. ≈ 256 dB
+
+<details><summary>Đáp án</summary>
+
+**A.** Quy tắc `SNR ≈ 6.02 × bit_depth` (dB) → `6.02 × 16 ≈ 96 dB`. Mỗi bit thêm ≈ 6 dB. Đây là lý do 24-bit (~144 dB) dùng cho thu âm/mastering còn 16-bit (~96 dB) đủ cho phát hành. B nhầm "16 bit → 16 dB"; C là 8-bit; D nhân bừa.
+</details>
+
+---
+
+**Câu 20.** (Cực khó) Chuyển một file 44.1 kHz / 16-bit / stereo sang chuẩn ASR 16 kHz / 16-bit / mono thì dung lượng (không nén) giảm đi khoảng bao nhiêu lần?
+- A. ≈ 5.5 lần
+- B. ≈ 2.76 lần
+- C. ≈ 2 lần
+- D. ≈ 11 lần
+
+<details><summary>Đáp án</summary>
+
+**A.** Bit depth giữ nguyên (16), nên tỉ lệ = (sample rate)×(channels): `(44100/16000) × (2/1) = 2.756 × 2 = 5.51`. Bẫy B: chỉ tính hạ sample rate mà quên gộp stereo→mono; bẫy C: chỉ tính stereo→mono. Đây là hai thao tác resample luôn đi cùng nhau khi chuẩn hoá dữ liệu ASR.
+</details>
+
+---
+
+**Câu 21.** (Khó) Khi làm STFT, tăng kích thước cửa sổ (window length) sẽ đánh đổi thế nào giữa phân giải thời gian và tần số?
+- A. Cửa sổ dài → phân giải **tần số** tốt hơn nhưng phân giải **thời gian** kém hơn (và ngược lại)
+- B. Cửa sổ dài → cả phân giải thời gian và tần số đều tốt hơn, không có đánh đổi
+- C. Cửa sổ dài → phân giải **thời gian** tốt hơn nhưng phân giải **tần số** kém hơn
+- D. Kích thước cửa sổ không ảnh hưởng phân giải, chỉ ảnh hưởng tốc độ tính
+
+<details><summary>Đáp án</summary>
+
+**A.** Cửa sổ **dài** gom nhiều chu kỳ → xác định tần số mịn hơn (Δf nhỏ) nhưng "nhoè" thời điểm sự kiện (Δt lớn) — hệ quả của nguyên lý bất định time-frequency. B là điều **không thể** (chính lý do STFT có "fixed resolution", còn wavelet mới thích ứng được). C đảo chiều đánh đổi.
+</details>
+
+---
+
+**Câu 22.** (Cực khó) Vì sao chuẩn ASR chọn sample rate 16 kHz thay vì 44.1 kHz như nhạc, dù nghe kém "trong" hơn?
+- A. Năng lượng phân biệt âm vị của tiếng nói tập trung dưới ~8 kHz nên 16 kHz (Nyquist 8 kHz) đủ, đồng thời giảm dữ liệu & chi phí tính so với 44.1 kHz
+- B. Vì model ASR không xử lý được tín hiệu trên 16 kHz về mặt kỹ thuật
+- C. Vì 16 kHz cho chất lượng cảm nhận cao hơn 44.1 kHz với tai người
+- D. Vì 16 kHz tránh được hoàn toàn hiện tượng aliasing còn 44.1 kHz thì không
+
+<details><summary>Đáp án</summary>
+
+**A.** Formant & phần lớn cue phân biệt phụ âm/nguyên âm nằm dưới ~8 kHz; Nyquist của 16 kHz = 8 kHz nên **giữ đủ thông tin ngữ âm** mà cắt bớt dữ liệu (nhanh hơn, rẻ hơn). B sai (không phải giới hạn kỹ thuật); C sai (44.1 kHz "trong" hơn về cảm nhận nhạc); D sai (cả hai đều cần anti-aliasing filter tương ứng).
 </details>

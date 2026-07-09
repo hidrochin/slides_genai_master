@@ -88,3 +88,30 @@ Cấu trúc **phân cấp (hierarchical)** (Doan 1977, Vogel 2004):
 ## 8. Allophone trong tiếng Việt
 
 Áp dụng khái niệm allophone (xem [B-ngữ-âm-học](B-ngu-am-hoc.md) §8): biến thể phoneme không đổi nghĩa, phụ thuộc ngữ cảnh. Bài tập điển hình: ghi âm Praat câu "Dùng tay vuốt mái tóc bạch kim của em qua tai" và chú thích ở **mức allophone**.
+
+---
+
+## 🎓 Mở rộng nâng cao (trình độ thạc sĩ — ngoài slide)
+
+### N1. Thanh điệu là hiện tượng ĐA CHIỀU (không chỉ pitch)
+Một thanh được đặc trưng bởi **nhiều tham số đồng thời**, đó là lý do hệ 6/8 thanh không thể mô tả bằng riêng đường F0:
+- **Contour F0** (pitch shape: level/rising/falling/dipping) — chiều chính.
+- **Register** (cao độ nền: cao/thấp) — chia đôi lịch sử (xem N3).
+- **Phonation** (kiểu rung dây thanh): modal / breathy (thở) / creaky–glottal (nghẹn). VD **ngã** có tắc thanh môn (glottalization), **nặng** khép nhanh — hai thanh có thể **cùng contour** nhưng khác phonation.
+- **Duration** (âm tiết obstruent /p t k/ → ngắn, chỉ mang sắc/nặng). ⇒ Bảng hệ thanh Hà Nội (§3) thực chất là bảng **đa đặc trưng**.
+
+### N2. Chuẩn hoá F0 cho máy (speaker normalization)
+- F0 tuyệt đối khác nhau lớn (nam ~120 Hz, nữ ~220 Hz) → phải chuẩn hoá để so contour:
+  - **Semitone:** `12·log₂(F0/F0_ref)` (thang tri giác, tuyến tính theo cảm nhận cao độ).
+  - **z-score theo speaker** hoặc **Mandarin/Vietnamese tone normalization** (chuẩn về khoảng của chính người nói).
+- Đây là bước bắt buộc cho **tonal ASR/tone classifier** và phân tích prosody.
+
+### N3. Nguồn gốc lịch sử của hệ thanh — ký hiệu A1/A2/B1… (Haudricourt)
+- Ký hiệu **A/B/C** ứng với 3 lớp thanh Proto-Việt (từ âm cuối *-∅/*-ʔ/*-h*); **D** = âm tiết tắc. Chữ số **1/2** = **register split** do **voicing của phụ âm đầu cổ**: đầu vô thanh → register **cao (1)**, đầu hữu thanh → register **thấp (2)** — hiện tượng **tonogenesis** (Haudricourt 1954).
+- Vì vậy 6 thanh Hà Nội = 3 lớp × 2 register (ngang/huyền = A1/A2; hỏi/ngã = C1/C2; sắc/nặng = B1/B2). Giải thích vì sao thanh đi thành **cặp cao–thấp**.
+
+### N4. Hàm ý tính toán (tại sao thanh làm ASR/TTS khó)
+- **Tonal ASR:** thanh nằm ở **F0/phonation** (suprasegmental) trong khi âm vị nằm ở **phổ (segmental)** → hai luồng thông tin khác miền; nhiều hệ tách **tone stream** riêng hoặc thêm feature F0. Lỗi phổ biến = **sai dấu** (nhầm hỏi/ngã, sắc/nặng) — thường phải nhờ **LM âm tiết** phân biệt.
+- **Đồng âm d/gi/r → /z/** (giọng Bắc): G2P (chữ→âm) xác định, nhưng âm→chữ nhập nhằng ([C-Câu17](../trac_nghiem/C-am-vi-tieng-viet.md)).
+- **Phonotactics** (ràng buộc kết hợp): tiếng Việt **không có cụm phụ âm đầu**, âm cuối chỉ trong tập hẹp (/p t k m n ŋ j w/) → không gian âm tiết hữu hạn (~ vài nghìn) ⇒ **PRO-SYLDIC** liệt kê được **mọi âm tiết phát âm được** (kể cả không tồn tại, cho loan word).
+- **Tonal coarticulation / sandhi:** contour thực bị biến dạng bởi thanh lân cận & vị trí trong câu → tone modeling phải theo ngữ cảnh, không chỉ dán nhãn tĩnh.

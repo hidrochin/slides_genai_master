@@ -106,3 +106,35 @@ Mục tiêu: dataset **sạch & phân đoạn tốt** → tăng độ chính xá
 | **Labeling Accuracy** | Labeling Consistency Score; Alignment Accuracy; **Inter-Annotator Agreement (IAA)** — Cohen's Kappa, Fleiss' Kappa. Xu hướng mới: **LLM as a judge** |
 
 **Best practices:** dùng công cụ tự động (SoX, librosa, PESQ/SNR estimator; t-SNE cho speaker embedding; phân tích phân bố cho bias); chạy **benchmark model trên subset** (đo **WER, CER, EER** trước khi dùng full); **Human-in-the-Loop** verify subset; theo dõi **Dataset Drift** khi thêm dữ liệu mới.
+
+---
+
+## 🎓 Mở rộng nâng cao (trình độ thạc sĩ — ngoài slide)
+
+### N1. Giả định thống kê & các loại "shift" (gốc rễ mọi lỗi tổng quát hoá)
+- Học có giám sát giả định train/test **i.i.d. cùng phân phối** `P(x,y)`. Thực tế speech vi phạm:
+  - **Covariate shift:** `P(x)` đổi (mic, nhiễu, kênh) — `P(y|x)` giữ.
+  - **Domain/dataset shift:** đổi lĩnh vực (đọc sách → hội thoại điện thoại).
+  - **Label/prior shift:** đổi phân bố lớp (SER: neutral áp đảo).
+- ⇒ **Test set phải mô phỏng phân bố triển khai**; WER offline luôn **lạc quan** hơn online (nối [playbook §4](I-thuc-hanh-kinh-nghiem.md)).
+
+### N2. Rò rỉ (leakage) & tách tập nghiêm ngặt
+- **Speaker leakage** = cùng người ở train+test → đo "khớp giọng" chứ không phải generalization ([E-Câu16](../trac_nghiem/E-du-lieu.md)). Bắt buộc **speaker-disjoint**; thêm **session/device/recording-disjoint** nếu có.
+- **Near-duplicate leakage:** cùng câu/đoạn crawl trùng → **dedup** (fingerprint audio + so text). **Stratify** theo giới/accent để test cân bằng.
+
+### N3. Augmentation = mã hoá bất biến (Vicinal Risk Minimization)
+- Augmentation ≈ mở rộng phân bố train quanh mỗi mẫu (**vicinal distribution**) để ép model **bất biến** với biến đổi không đổi nhãn:
+  - **Noise/RIR** → bất biến kênh & phòng; **SpecAugment** → bất biến che phổ/thời gian; **speed perturbation** → bất biến tốc độ (giữ pitch).
+- **Nguyên tắc:** augment phải khớp bất biến **của đúng bài toán** — speed/pitch perturb **phá** đặc trưng của **speaker verification** ([E-Câu17](../trac_nghiem/E-du-lieu.md)). Đừng augment cái mà bài toán cần phân biệt.
+
+### N4. Bán giám sát & pseudo-label — vì sao & rủi ro
+- Cơ sở lý thuyết: **cluster/manifold assumption** (dữ liệu cùng lớp tụ cụm), **consistency regularization** (đầu ra ổn định dưới nhiễu), **entropy minimization** (đẩy quyết định khỏi vùng mật độ cao).
+- **Confirmation bias:** model tự củng cố lỗi của chính nó qua các vòng → giảm bằng **lọc confidence**, **teacher lớn hơn** (Whisper sinh weak label), giữ **dữ liệu nhãn thật** làm neo ([E-Câu20](../trac_nghiem/E-du-lieu.md)).
+
+### N5. Nhiễu nhãn & đo đồng thuận (Kappa có công thức)
+- **Cohen's Kappa:** `κ = (p_o − p_e)/(1 − p_e)` — `p_o` đồng thuận quan sát, `p_e` đồng thuận ngẫu nhiên kỳ vọng. κ>0.8 "gần như hoàn hảo", 0.6–0.8 "đáng kể". **Fleiss' Kappa** cho ≥3 annotator; **Krippendorff's α** cho dữ liệu thiếu/nhãn liên tục.
+- **Trần hiệu năng (ceiling):** nếu người còn bất đồng (κ thấp) thì model **không thể** vượt mức nhiễu nhãn đó → sửa hướng dẫn/annotation trước khi đổ tiền vào model.
+
+### N6. Định nghĩa metric chất lượng (hay bị hỏi bản chất)
+- **SNR** `= 10·log₁₀(P_signal/P_noise)` dB (cao=sạch). **PESQ** (ITU-T P.862, ~−0.5..4.5) mô phỏng MOS chất lượng thoại. **STOI** (0..1) tương quan **độ dễ hiểu** trong nhiễu. Ba metric này đo **chất lượng/độ sạch**, khác nhóm với diversity/balance/labeling.
+- **Data-centric AI:** cùng model, cải thiện **chất lượng+độ phủ dữ liệu** thường thắng tinh chỉnh kiến trúc — ưu tiên tìm & sửa **slice lỗi** (accent/số/tên riêng) hơn là tăng tham số.

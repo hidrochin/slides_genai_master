@@ -1,7 +1,7 @@
-# TRẮC NGHIỆM — Cụm H: Nhận dạng Tiếng nói / ASR (17 câu)
-Nguồn: `07 - Automatic Speech Recognition`. Ôn kèm [H-nhận-dạng](../on_tap/H-nhan-dang-tieng-noi.md).
+# TRẮC NGHIỆM — Cụm H: Nhận dạng Tiếng nói / ASR (23 câu)
+Nguồn: `07 - Automatic Speech Recognition` + kiến thức thực chiến. Ôn kèm [H-nhận-dạng](../on_tap/H-nhan-dang-tieng-noi.md) và [playbook thực chiến](../on_tap/I-thuc-hanh-kinh-nghiem.md).
 
-> **Cách dùng:** Phương án dài bằng nhau, không tô đậm. **(Nhiều đáp án)** = chọn đủ. **(Khó)** = suy luận/phân biệt bẫy.
+> **Cách dùng:** Phương án dài bằng nhau, không tô đậm. **(Nhiều đáp án)** = chọn đủ. **(Khó)/(Cực khó)** = suy luận/tính toán/phân biệt bẫy. Câu 18–23 đi sâu hơn slide (decode, fusion, streaming).
 
 ---
 
@@ -226,4 +226,82 @@ Nguồn: `07 - Automatic Speech Recognition`. Ôn kèm [H-nhận-dạng](../on_t
 <details><summary>Đáp án</summary>
 
 **A.** Với rare words/proper names: **expand & diversify data**, **transfer learning**, tích hợp **NER** để nhận diện tên riêng/thuật ngữ theo ngữ cảnh, và tối ưu model/algorithm. B, C, D đều đi ngược hướng cải thiện.
+</details>
+
+---
+
+**Câu 18.** (Cực khó) Reference có 4 từ. Hệ ASR sinh ra 9 từ, trong đó khớp đúng 4 từ reference nhưng chèn thêm 5 từ thừa (I=5, S=0, D=0). WER bằng bao nhiêu và nói lên điều gì?
+- A. WER = 125% — WER có thể > 100% vì insertion không bị chặn bởi N
+- B. WER = 100% — vì hệ sai toàn bộ
+- C. WER = 55.6% — vì chia cho số từ ASR (9)
+- D. WER = 56% — vì insertion không được tính vào lỗi
+
+<details><summary>Đáp án</summary>
+
+**A.** `WER = (S+D+I)/N = (0+0+5)/4 = 1.25 = 125%`. Đây là bẫy quan trọng: **WER có thể vượt 100%** khi model "ảo giác" chèn nhiều từ (hay gặp với audio nhiễu/khoảng lặng dài). C sai vì mẫu số luôn là **N reference**, không phải số từ output.
+</details>
+
+---
+
+**Câu 19.** (Khó) Trong shallow fusion, điểm cho một giả thuyết W được tính `score = log P_AM(X|W) + λ · log P_LM(W)`. Vai trò của external LM và λ là gì?
+- A. LM ngoài (train trên text lớn) kéo giả thuyết về phía chuỗi từ hợp lý; λ điều tiết mức tin LM so với acoustic
+- B. LM ngoài thay thế hoàn toàn acoustic model; λ là learning rate khi train
+- C. LM chỉ dùng lúc train, λ là dropout rate; khi inference bỏ cả hai
+- D. LM ngoài làm chậm decode nên λ luôn đặt bằng 0 trong thực tế
+
+<details><summary>Đáp án</summary>
+
+**A.** Shallow fusion cộng log-prob của **external LM** (thường train trên corpus text lớn hơn nhiều transcript audio) vào điểm beam search; **λ** cân bằng acoustic ↔ ngôn ngữ (giống vai trò LMSF ở [Câu 3](#)). Hữu ích cho domain có nhiều thuật ngữ/tên riêng. B, C, D hiểu sai bản chất fusion.
+</details>
+
+---
+
+**Câu 20.** (Khó) Vì sao greedy decoding (chọn token xác suất cao nhất mỗi bước) thường cho WER cao hơn beam search?
+- A. Greedy chọn tối ưu cục bộ từng bước nên có thể bỏ lỡ chuỗi có tổng xác suất cao hơn; beam giữ nhiều giả thuyết song song
+- B. Greedy chậm hơn beam nên bị cắt sớm trước khi hội tụ
+- C. Greedy không dùng được acoustic model, chỉ dựa language model
+- D. Beam search luôn cho kết quả tệ hơn greedy nhưng nhanh hơn
+
+<details><summary>Đáp án</summary>
+
+**A.** Greedy = tham lam cục bộ, dễ "kẹt" ở nhánh không tối ưu toàn cục; **beam search** giữ *k* giả thuyết tốt nhất, cho phép một lựa chọn kém ở bước sớm dẫn tới tổng điểm cao hơn về sau. Đổi lại beam **chậm hơn** (không phải nhanh hơn như D). Beam width lớn → chính xác hơn nhưng tốn tính.
+</details>
+
+---
+
+**Câu 21.** (Cực khó) So với CTC, vì sao RNN-T tốn bộ nhớ và khó train hơn dù cùng học alignment?
+- A. RNN-T tính trên lattice 2 chiều (thời gian × nhãn) với Joiner kết hợp mọi cặp encoder-predictor state → tensor lớn hơn nhiều CTC (chỉ 1 chiều thời gian)
+- B. RNN-T phải có forced alignment frame-level trước khi train, CTC thì không
+- C. RNN-T dùng attention O(mn) còn CTC không dùng attention
+- D. RNN-T bắt buộc external LM khi train nên nặng gấp đôi
+
+<details><summary>Đáp án</summary>
+
+**A.** RNN-T marginalize trên **lattice T×U** (frame × token) qua Joiner network → activation/gradient tensor lớn (hay phải dùng function-merging, gradient checkpointing). CTC chỉ cần forward-backward trên **một trục thời gian**. B sai (cả hai **không** cần forced alignment); C sai (RNN-T không dùng attention); D sai (LM ngoài là tuỳ chọn).
+</details>
+
+---
+
+**Câu 22.** (Khó) Kiến trúc Conformer cải tiến Transformer encoder cho ASR bằng cách nào?
+- A. Chèn module convolution vào giữa các block self-attention để nắm cả phụ thuộc **cục bộ** (conv) lẫn **toàn cục** (attention)
+- B. Loại bỏ self-attention, chỉ dùng convolution thuần cho nhẹ
+- C. Thay feed-forward bằng HMM để mô hình hoá thời gian
+- D. Dùng attention hai chiều nên chỉ chạy được offline, không streaming
+
+<details><summary>Đáp án</summary>
+
+**A.** **Conformer = Convolution + Transformer**: self-attention bắt quan hệ **xa/toàn cục**, convolution bắt pattern **cục bộ** (formant, transition) → SOTA nhiều benchmark ASR. B, C sai bản chất; D sai (có biến thể streaming với masked/limited-context attention).
+</details>
+
+---
+
+**Câu 23.** (Cực khó) Trong streaming ASR, tăng "lookahead" (cho model nhìn thêm vài frame tương lai) tác động thế nào?
+- A. Giảm WER (ngữ cảnh tương lai giúp quyết định tốt hơn) nhưng tăng latency — một trade-off phải cân theo ứng dụng
+- B. Giảm cả WER lẫn latency vì model thấy nhiều thông tin hơn
+- C. Tăng WER và tăng latency — không có lợi ích gì
+- D. Không ảnh hưởng WER, chỉ làm model chạy nhanh hơn
+
+<details><summary>Đáp án</summary>
+
+**A.** Nhìn thêm frame tương lai (right context) cho quyết định token tốt hơn ⇒ **WER giảm**, nhưng phải **chờ** frame đó tới ⇒ **latency tăng**. Đây là núm chỉnh cốt lõi của streaming (VD trợ lý giọng nói cần latency thấp phải hi sinh chút WER). B là điều không thể; latency và độ chính xác luôn đánh đổi.
 </details>

@@ -1,7 +1,7 @@
-# TRẮC NGHIỆM — Cụm A: Tổng quan Công nghệ Tiếng nói (12 câu)
-Nguồn: `00 - Speech Technology`, `01 - Articulatory Phonetics` (Introduction). Ôn kèm [A-tổng-quan](../on_tap/A-tong-quan.md).
+# TRẮC NGHIỆM — Cụm A: Tổng quan Công nghệ Tiếng nói (16 câu)
+Nguồn: `00 - Speech Technology`, `01 - Articulatory Phonetics` (Introduction) + góc nhìn hệ thống thực tế. Ôn kèm [A-tổng-quan](../on_tap/A-tong-quan.md) và [playbook thực chiến](../on_tap/I-thuc-hanh-kinh-nghiem.md).
 
-> **Cách dùng:** Phương án viết **dài bằng nhau, không tô đậm** — không đoán được đáp án qua hình thức. Tự chọn **trước**, rồi mở "Đáp án". Câu **(Nhiều đáp án)** có từ 2 phương án đúng — phải chọn ĐỦ mới tính đúng. Câu **(Khó)** đòi hỏi suy luận/phân biệt bẫy.
+> **Cách dùng:** Phương án viết **dài bằng nhau, không tô đậm** — không đoán được đáp án qua hình thức. Tự chọn **trước**, rồi mở "Đáp án". Câu **(Nhiều đáp án)** có từ 2 phương án đúng — phải chọn ĐỦ mới tính đúng. Câu **(Khó)/(Cực khó)** đòi hỏi suy luận/phân biệt bẫy. Câu 13–16 nâng cao (SLU cascade vs E2E, độ khó của speech, anti-spoofing).
 
 ---
 
@@ -160,4 +160,56 @@ Nguồn: `00 - Speech Technology`, `01 - Articulatory Phonetics` (Introduction).
 <details><summary>Đáp án</summary>
 
 **A.** Vision: **democratizing speech technology — accessible and ethical for everyone**, kèm định hướng universal models, emotion recognition, low-power models cho vùng xa. D mâu thuẫn trực tiếp (định hướng ngược lại là hỗ trợ low-resource languages).
+</details>
+
+---
+
+**Câu 13.** (Cực khó) Xây trợ lý giọng nói hiểu ý định người dùng (SLU) — so sánh kiến trúc cascade (ASR → NLU trên text) và E2E (audio → intent) đúng nhất là gì?
+- A. Cascade tận dụng model ASR/NLU mạnh sẵn có & dễ debug nhưng lỗi ASR lan sang NLU; E2E giữ được ngữ điệu/paralinguistic và tránh error propagation nhưng cần nhiều dữ liệu audio-intent
+- B. Cascade luôn tốt hơn E2E ở mọi mặt vì đơn giản hơn
+- C. E2E không cần dữ liệu, cascade cần rất nhiều dữ liệu
+- D. Hai kiến trúc giống hệt nhau, chỉ khác tên gọi
+
+<details><summary>Đáp án</summary>
+
+**A.** **Cascade** (ASR→NLU): dùng lại thành phần mạnh, dễ chèn LM & debug, nhưng **lỗi ASR trôi xuống** NLU và **mất thông tin âm thanh** (ngữ điệu, cảm xúc). **E2E**: giữ paralinguistic, không error propagation, nhưng **đói dữ liệu** (cặp audio↔intent hiếm) và khó debug. Chọn tuỳ tài nguyên dữ liệu & yêu cầu. B, C, D sai.
+</details>
+
+---
+
+**Câu 14.** (Khó) Vì sao xử lý tiếng nói khó hơn xử lý văn bản thuần (text NLP)?
+- A. Tín hiệu liên tục, biến thiên theo speaker/accent/tốc độ/nhiễu, không có ranh giới từ rõ, và có coarticulation (âm ảnh hưởng lẫn nhau)
+- B. Vì text có nhiều ngôn ngữ hơn speech
+- C. Vì speech luôn ngắn hơn text nên ít thông tin
+- D. Vì text không cần model học còn speech thì cần
+
+<details><summary>Đáp án</summary>
+
+**A.** Speech là tín hiệu **liên tục, biến thiên cao** (cùng câu, hai người/hai lần nói ra rất khác), **không có khoảng trắng phân từ**, chịu **nhiễu & kênh thu**, và **coarticulation** (âm trước/sau nhoè vào nhau). Đây là gốc rễ khiến ASR/SLU khó hơn NLP text. B, C, D sai.
+</details>
+
+---
+
+**Câu 15.** (Cực khó) Nối tác vụ với "hình dạng bài toán": (1) ASR, (2) Speaker Verification, (3) Speaker Identification, (4) SER (emotion).
+- A. 1: seq2seq (audio→text); 2: nhị phân 1-1 (accept/reject); 3: phân loại 1-N; 4: phân loại nhãn cảm xúc
+- B. 1: phân loại 1-N; 2: seq2seq; 3: nhị phân 1-1; 4: hồi quy RTF
+- C. 1: nhị phân; 2: seq2seq; 3: seq2seq; 4: phân loại
+- D. Cả bốn đều là bài toán seq2seq giống nhau
+
+<details><summary>Đáp án</summary>
+
+**A.** **ASR** = sequence-to-sequence (audio→chuỗi text). **Verification** = quyết định **nhị phân 1-1** (đúng người claim không → EER). **Identification** = **phân loại 1-N** (là ai → accuracy/top-k). **SER** = **phân loại** nhãn cảm xúc. Biết "hình dạng" giúp chọn loss & metric đúng. Các phương án khác gán sai.
+</details>
+
+---
+
+**Câu 16.** (Khó) Anti-spoofing / phát hiện giọng giả (deepfake) trong hệ xác thực giọng thường dựa vào dấu hiệu nào?
+- A. Artifact do vocoder/replay để lại (phân bố tần số bất thường, thiếu vi cấu trúc tự nhiên), dùng model countermeasure riêng cạnh speaker verification
+- B. Chỉ cần tăng bit depth khi thu là loại được giọng giả
+- C. Giọng giả luôn to hơn giọng thật nên đo âm lượng là đủ
+- D. Không thể phát hiện được nên phải bỏ xác thực giọng
+
+<details><summary>Đáp án</summary>
+
+**A.** Giọng tổng hợp/replay để lại **artifact** (phổ bất thường, thiếu chi tiết vi mô, dấu vết vocoder) → hệ dùng **countermeasure/PAD** (Presentation Attack Detection) song song với speaker verification, đo bằng metric như **t-DCF/EER**. B, C, D là quan niệm sai; đây là mảng nghiên cứu tích cực (ASVspoof).
 </details>

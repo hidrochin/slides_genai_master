@@ -98,3 +98,37 @@ File size (bit) = Bit rate × Thời lượng (s)
 - **MFCC (Mel-Frequency Cepstral Coefficients):** biểu diễn **gọn** của **power spectrum**, thiết kế để **xấp xỉ tri giác người (Mel scale)** → nén dữ liệu audio nhiều chiều thành đặc trưng gọn, có nghĩa. (Khái niệm nền: **cepstrum**.)
 
 > **Chuỗi trích đặc trưng điển hình:** waveform → framing (windowing) → STFT → Mel filter bank → log → (DCT) → **MFCC**. (Chi tiết windowing/Hamming/Mel filterbank ở [H-nhận-dạng](H-nhan-dang-tieng-noi.md).)
+
+---
+
+## 🎓 Mở rộng nâng cao (trình độ thạc sĩ — ngoài slide)
+
+### N1. Fourier: DTFT → DFT → FFT
+- **DTFT** của tín hiệu rời rạc `x[n]`: `X(e^{jω}) = Σₙ x[n] e^{-jωn}` — phổ **liên tục & tuần hoàn 2π**.
+- **DFT** (lấy N mẫu phổ): `X[k] = Σ_{n=0}^{N-1} x[n] e^{-j2πkn/N}`, k = 0..N−1. Độ phân giải tần số `Δf = f_s / N` → muốn mịn hơn thì **N lớn** (cửa sổ dài) ⇒ đánh đổi thời gian (xem N3).
+- **FFT** = thuật toán tính DFT trong `O(N log N)` thay vì `O(N²)` (Cooley–Tukey), nền tảng khiến STFT khả thi real-time.
+- **Power spectrum** = `|X[k]|²`; ước lượng thực tế dùng **periodogram/Welch** (trung bình nhiều đoạn để giảm phương sai).
+
+### N2. Định lý lấy mẫu — vì sao và aliasing (dạng gập)
+- Lấy mẫu ở `f_s` làm **phổ lặp lại (replication)** mỗi `f_s`. Nếu băng thông tín hiệu `> f_s/2`, các bản sao **chồng lấn** → **aliasing** không thể gỡ.
+- **Công thức gập:** tần số `f` hiện ra ở `f_alias = |f − k·f_s|` sao cho rơi vào `[0, f_s/2]` (k nguyên gần nhất). VD 30 kHz @ 44.1 kHz → 14.1 kHz.
+- Thực tế: **anti-aliasing low-pass filter** trước ADC + **reconstruction filter** sau DAC (nội suy sinc lý tưởng).
+
+### N3. Nhiễu lượng tử hoá & SNR — chứng minh "6.02·N"
+- Lượng tử đều bước `Δ`: sai số coi như phân bố đều `[−Δ/2, Δ/2]` → **phương sai nhiễu** `σ² = Δ²/12`.
+- Với tín hiệu full-scale biên độ `A = 2^{N-1}·Δ`, tỉ số công suất cho: **`SNR = 6.02·N + 1.76 dB`** (giả định sine full-scale). Đây là dạng chính xác của quy tắc thô `≈6.02·N` ở [§ trên]. Mỗi bit thêm ≈ **6 dB** dynamic range.
+
+### N4. Cửa sổ & nguyên lý bất định (Gabor limit)
+- Không thể phân giải đồng thời chính xác cả thời gian lẫn tần số: **`Δt · Δf ≥ 1/(4π)`** — STFT có **phân giải cố định** (cửa sổ dài ⇒ Δf nhỏ, Δt lớn); **wavelet** cho phân giải thích nghi.
+- Chọn cửa sổ = đánh đổi **main-lobe width (phân giải)** ↔ **side-lobe level (spectral leakage)**: Rectangular main-lobe hẹp nhưng side-lobe cao (−13 dB); **Hann/Hamming** side-lobe thấp (−31/−43 dB) nhưng main-lobe rộng gấp đôi.
+- **Pre-emphasis** `y[n] = x[n] − α·x[n−1]` (α≈0.97) trước framing để nâng năng lượng tần cao (bù dốc −6 dB/octave của nguồn thanh môn).
+
+### N5. Mel scale & MFCC — công thức đầy đủ
+- **Thang Mel:** `mel(f) = 2595·log₁₀(1 + f/700)` (xấp xỉ tri giác cao độ, gần tuyến tính <1 kHz, log ở tần cao).
+- **Mel filterbank:** ~26–40 bộ lọc **tam giác** chồng lấn, đều nhau **trên trục Mel** (⇒ mịn ở tần thấp, thô ở tần cao); mỗi lọc gộp năng lượng thành 1 hệ số → lấy **log** (nén dynamic range, gần Weber–Fechner).
+- **MFCC:** `MFCC = DCT(log mel-energies)`, giữ ~13 hệ số đầu. **DCT** để **khử tương quan** giữa các dải Mel (⇒ ma trận hiệp phương sai gần chéo → hợp GMM chéo) và **tách envelope (biến thiên chậm) khỏi fine structure**. Thêm **Δ, ΔΔ** (đạo hàm bậc 1,2) để mã hoá động học thời gian. **Cepstral liftering / CMVN** (mean-variance normalization) để bền với kênh thu.
+- **Vì sao DL hiện đại chuộng log-mel hơn MFCC:** CNN/Transformer tự học tương quan → không cần DCT khử tương quan; MFCC làm mất thông tin. MFCC vẫn ngự trị thời **GMM-HMM** (cần feature khử tương quan).
+
+### N6. Filterbank vs codec — hai "nén" khác nhau
+- **Nén perceptual (MP3/AAC/Opus):** bỏ thông tin **dưới ngưỡng nghe** (psychoacoustic masking: masking tần số & thời gian) → không phục vụ ML mà phục vụ tai người.
+- **Feature (MFCC/mel):** "nén" nhằm **giữ thông tin phân biệt âm vị**, bỏ pha & chi tiết dư — mục tiêu khác hẳn codec.

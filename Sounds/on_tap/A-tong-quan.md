@@ -70,3 +70,29 @@ Virtual Assistant (Siri, Alexa, Google Assistant) · Speech Translation · User 
 - **Rule-based AI** = luật/logic nghiệp vụ do chuyên gia định nghĩa trước. **Machine Learning** = học pattern từ dữ liệu lớn theo thời gian.
 - **ML vs Deep Learning:** DL là nhánh ML dùng mạng nơ-ron nhiều tầng, tự học đặc trưng (feature) thay vì kỹ sư thiết kế tay.
 - Với tiếng nói: hệ **deep learning hiện đại ít phụ thuộc mã hoá tri thức ngữ âm trực tiếp** — để mô hình tự học ánh xạ chữ↔âm từ dữ liệu thường tốt hơn việc "hand-engineer" cấu trúc ngữ âm. Nhưng hiểu ngữ âm vẫn giúp **mô tả & debug** hệ thống (xem [B-ngữ-âm-học](B-ngu-am-hoc.md)).
+
+---
+
+## 🎓 Mở rộng nâng cao (trình độ thạc sĩ — ngoài slide)
+
+### N1. Ba tầng thông tin trong tín hiệu tiếng nói
+Cùng một sóng âm chứa đồng thời, và mỗi tác vụ "rút" một tầng khác nhau:
+- **Linguistic** (nói *gì*): từ, âm vị → **ASR, SLU**.
+- **Paralinguistic** (nói *thế nào*): cảm xúc, nhấn nhá, thái độ, sức khoẻ → **SER, prosody, chẩn đoán y tế**.
+- **Extralinguistic** (nói bởi *ai*, ở *đâu*): danh tính, giới, tuổi, accent, kênh/phòng → **Speaker ID/Verification, Diarization**.
+- ⇒ Chọn feature/augmentation theo tầng cần: ASR muốn **bất biến speaker**; speaker verification muốn **bất biến nội dung**. Đây là lý do augmentation phải khớp bài toán ([E §N3](E-du-lieu.md)).
+
+### N2. Khung noisy-channel hợp nhất các tác vụ
+- Rất nhiều tác vụ speech là **suy diễn Bayes** trên kênh nhiễu: `Ŷ = argmax P(X|Y)P(Y)`.
+  - ASR: Y = chuỗi từ ([H §3](H-nhan-dang-tieng-noi.md)); TTS: bài toán **ngược** (sinh có điều kiện, [G §N1](G-tong-hop-tieng-noi.md)).
+- **Hình dạng bài toán** quyết định model & metric: **seq2seq** (ASR/TTS) · **1-1 nhị phân** (verification → EER) · **1-N phân loại** (identification/SER → accuracy) · **phân đoạn** (diarization → DER). Nắm "hình dạng" là chìa khoá trả lời câu hỏi thực chiến ([A-Câu15](../trac_nghiem/A-tong-quan.md)).
+
+### N3. Cocktail party & tách nguồn
+- Bài toán **cocktail party** (nghe một giọng giữa nhiều giọng) là lõi của **speech separation** (Conv-TasNet, SepFormer), **target speaker extraction**, và **overlap** trong diarization — phần khó nhất của xử lý hội thoại thực.
+
+### N4. Bước ngoặt Foundation Models & SSL
+- Trước 2020: pipeline modular, feature tay (MFCC), cần **nhiều nhãn**. Sau 2020: **pretrain SSL trên audio không nhãn** (wav2vec2, HuBERT, Whisper) → **một backbone** fine-tune cho nhiều tác vụ, **low-resource friendly**, multilingual/zero-shot.
+- Hệ quả nghiên cứu: **benchmark saturation** (WER LibriSpeech ~2%) đẩy trọng tâm sang **robustness thực tế**, **đa ngôn ngữ/low-resource**, **on-device**, và **đạo đức** (deepfake, watermarking, consent) — đúng các "xu hướng/thách thức" ở §5–6 nhưng ở tầng nguyên nhân.
+
+### N5. Khoảng cách benchmark ↔ thực tế
+- Số đẹp trên test tĩnh **không** đảm bảo sản phẩm tốt: đổi mic/nhiễu/domain, tên riêng & số, code-switching, accent thiểu số. ⇒ tư duy **hệ thống**: đo trên **golden set sát use-case**, giám sát **drift**, và vòng lặp data-centric (thu lỗi thực → sửa dữ liệu). Xem [playbook thực chiến](I-thuc-hanh-kinh-nghiem.md).

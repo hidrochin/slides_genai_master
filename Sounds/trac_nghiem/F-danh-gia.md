@@ -1,7 +1,7 @@
-# TRẮC NGHIỆM — Cụm F: Đánh giá Mô hình Tiếng nói (16 câu)
-Nguồn: `05 - Model Evaluation`. Ôn kèm [F-đánh-giá](../on_tap/F-danh-gia.md).
+# TRẮC NGHIỆM — Cụm F: Đánh giá Mô hình Tiếng nói (21 câu)
+Nguồn: `05 - Model Evaluation` + kinh nghiệm đo lường thực tế. Ôn kèm [F-đánh-giá](../on_tap/F-danh-gia.md), bài tập tính ở [I-bài-tập](I-bai-tap-tinh-toan.md).
 
-> **Cách dùng:** Phương án dài bằng nhau, không tô đậm. **(Nhiều đáp án)** = chọn đủ. **(Khó)** = tính toán/phân biệt bẫy. Nhớ: `WER = (S+D+I)/N`, `RTF = t_synth / t_audio`, `EER: FAR=FRR`.
+> **Cách dùng:** Phương án dài bằng nhau, không tô đậm. **(Nhiều đáp án)** = chọn đủ. **(Khó)/(Cực khó)** = tính toán/phân biệt bẫy. Nhớ: `WER = (S+D+I)/N`, `RTF = t_synth / t_audio`, `EER: FAR=FRR`. Câu 17–21 đi sâu hơn slide (đo lường thực chiến).
 
 ---
 
@@ -212,4 +212,69 @@ Nguồn: `05 - Model Evaluation`. Ôn kèm [F-đánh-giá](../on_tap/F-danh-gia.
 <details><summary>Đáp án</summary>
 
 **A.** Train & Dev là **seen** (Dev để tối ưu hyperparameter/error analysis), **Test là unseen** (đánh giá cuối, đo tổng quát hoá). B đảo ngược seen/unseen; D sai (test phải unseen).
+</details>
+
+---
+
+**Câu 17.** (Cực khó) Đánh giá một hệ ASR trên tập test, cách tổng hợp WER nào đúng chuẩn báo cáo?
+- A. Gộp tổng (S+D+I) và tổng N của toàn bộ tập rồi mới chia (corpus-level, "micro")
+- B. Tính WER từng câu rồi lấy trung bình cộng các WER (macro) — luôn cho cùng kết quả
+- C. Lấy WER của câu dài nhất làm đại diện cho cả tập
+- D. Lấy median WER của các câu để tránh outlier
+
+<details><summary>Đáp án</summary>
+
+**A.** WER chuẩn là **corpus-level**: cộng dồn lỗi và cộng dồn N *rồi* chia — câu dài đóng góp nhiều hơn theo số từ. Trung bình cộng WER từng câu (B) cho câu ngắn (VD 1 từ, 1 lỗi = 100%) **trọng số quá lớn**, làm lệch con số → **không** bằng micro (nên B sai ở chữ "luôn cùng kết quả"). C, D không phải quy ước báo cáo.
+</details>
+
+---
+
+**Câu 18.** (Khó) Vì sao không nên so sánh trực tiếp điểm MOS tuyệt đối giữa hai nghiên cứu/bài báo khác nhau?
+- A. MOS phụ thuộc mạnh vào người nghe, tập câu, thiết bị, hướng dẫn chấm — nên chỉ có ý nghĩa *tương đối trong cùng một thí nghiệm*
+- B. MOS là thang khách quan tuyệt đối nên luôn so sánh được giữa mọi nghiên cứu
+- C. MOS chỉ đo tốc độ tổng hợp nên khác nhau do phần cứng
+- D. MOS luôn nằm trong khoảng 4.0–4.5 nên khác biệt không đáng kể
+
+<details><summary>Đáp án</summary>
+
+**A.** MOS là **chủ quan**, kết quả trôi theo cohort người nghe, bộ mẫu, môi trường, cách diễn đạt thang điểm → hai study khác nhau không cùng "mét đo". Muốn so công bằng phải đặt các hệ **cùng một phiên nghe** (A/B, CMOS), kèm khoảng tin cậy (CI) và đủ số rater. B là quan niệm sai phổ biến nhất.
+</details>
+
+---
+
+**Câu 19.** (Khó) Với tiếng Việt (đơn lập, ranh giới "từ" nhập nhằng), vì sao CER/SylER đôi khi được ưu tiên hơn WER?
+- A. WER phụ thuộc cách tách từ — cùng một transcript, tách từ khác nhau cho WER khác nhau; CER/âm-tiết ổn định hơn vì đơn vị rõ ràng
+- B. CER luôn thấp hơn WER nên báo cáo đẹp hơn
+- C. Tiếng Việt không có ký tự nên không tính được WER
+- D. CER đo tốc độ còn WER đo độ chính xác
+
+<details><summary>Đáp án</summary>
+
+**A.** "Từ" tiếng Việt cần **word segmentation** (xem [C-Câu14](C-am-vi-tieng-viet.md)); tách khác nhau → N và ranh giới lỗi khác nhau → WER dao động. Đơn vị **ký tự (CER)** hoặc **âm tiết (SylER)** xác định rõ ràng, ổn định hơn để so sánh. B sai (CER thấp hơn không phải lý do "đúng"); C, D sai bản chất.
+</details>
+
+---
+
+**Câu 20.** (Cực khó) Trong Speaker Verification, nếu **hạ** ngưỡng quyết định (dễ chấp nhận hơn) thì FAR và FRR biến động ra sao, và điều đó liên quan EER thế nào?
+- A. FAR tăng, FRR giảm; EER là điểm trên đường cong nơi hai giá trị cắt nhau (FAR=FRR)
+- B. Cả FAR và FRR cùng tăng; EER là trung bình cộng của chúng
+- C. FAR giảm, FRR tăng; EER là điểm FAR đạt cực đại
+- D. FAR và FRR không đổi vì EER cố định theo model
+
+<details><summary>Đáp án</summary>
+
+**A.** Ngưỡng **thấp** = dễ chấp nhận ⇒ nhận nhầm kẻ mạo danh nhiều hơn (**FAR↑**) nhưng ít từ chối người thật hơn (**FRR↓**). Quét ngưỡng vẽ ra đường DET; **EER** = điểm **FAR = FRR**. Chọn ngưỡng vận hành thực tế còn tuỳ chi phí: ngân hàng ưu tiên FAR thấp (chặt), tiện lợi ưu tiên FRR thấp (lỏng).
+</details>
+
+---
+
+**Câu 21.** (Cực khó) Hệ A có WER 8.0%, hệ B có WER 7.6% trên cùng tập test 1000 câu. Kết luận nào hợp lý nhất?
+- A. Chưa thể khẳng định B tốt hơn — cần kiểm định ý nghĩa thống kê (VD matched-pairs / bootstrap) vì chênh lệch nhỏ có thể do ngẫu nhiên
+- B. B chắc chắn tốt hơn A vì 7.6% < 8.0%
+- C. Hai hệ như nhau vì đều dưới 10%
+- D. A tốt hơn vì số câu lỗi tuyệt đối của A lớn hơn nên "học" nhiều hơn
+
+<details><summary>Đáp án</summary>
+
+**A.** Chênh 0.4% WER trên 1000 câu có thể nằm trong nhiễu thống kê. Thực chiến phải chạy **significance test** (matched-pairs, MAPSSWE, bootstrap CI) trước khi tuyên bố cải thiện — nếu không dễ "đuổi theo" khác biệt không thực. B là kết luận vội vàng phổ biến; C, D sai logic.
 </details>
